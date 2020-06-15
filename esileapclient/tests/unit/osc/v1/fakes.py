@@ -23,7 +23,8 @@ lease_resource_type = "dummy_node"
 lease_resource_uuid = "1213123123"
 lease_start_date = "2010"
 lease_status = "fake_status"
-lease_uuid = "9999999"
+lease_contract_uuid = "9999999"
+lease_offer_uuid = "111111111"
 
 OFFER = {
     'end_date': lease_end_date,
@@ -33,7 +34,17 @@ OFFER = {
     'resource_uuid': lease_resource_uuid,
     'start_date': lease_start_date,
     'status': lease_status,
-    'uuid': lease_uuid
+    'uuid': lease_offer_uuid
+}
+
+CONTRACT = {
+    'end_date': lease_end_date,
+    'offer_uuid': lease_offer_uuid,
+    'project_id': lease_project_id,
+    'properties': json.loads(lease_properties),
+    'start_date': lease_start_date,
+    'status': lease_status,
+    'uuid': lease_contract_uuid
 }
 
 
