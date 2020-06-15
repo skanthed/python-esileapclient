@@ -2,7 +2,7 @@
 
 Python API for interacting with ESI-Leap
 
-###Overview
+### Overview
 
 This is a client for the OpenStack Lease API. It provides:
 
@@ -10,7 +10,7 @@ This is a client for the OpenStack Lease API. It provides:
 
 python-esileapclient is licensed under the Apache License, Version 2.0, like the rest of OpenStack.
 
-###openstack lease CLI
+### openstack lease CLI
 
 The openstack lease command-line interface is available when the lease plugin (included in this package) is used with the `OpenStackClient https://docs.openstack.org/python-openstackclient/latest/
 
