@@ -16,7 +16,7 @@ import testtools
 from esileapclient.osc import plugin
 from esileapclient.v1 import client
 
-API_VERSION = '1.0'
+API_VERSION = '1'
 
 
 class FakeClientManager(object):
@@ -55,7 +55,7 @@ class MakeClientTest(testtools.TestCase):
     @mock.patch.object(client, 'Client')
     def test_make_client_v1(self, mock_client):
         instance = FakeClientManager()
-        instance._api_version = {'lease': '1.0'}
+        instance._api_version = {'lease': '1'}
         plugin.make_client(instance)
         mock_client.assert_called_once_with(
             os_esileap_api_version=plugin.LATEST_VERSION,

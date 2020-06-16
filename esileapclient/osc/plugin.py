@@ -11,22 +11,23 @@
 #    under the License.
 
 import logging
+import argparse
 
 from osc_lib import utils
 
 
-DEFAULT_API_VERSION = '1.0'
+DEFAULT_API_VERSION = '1'
 
 # Required by the OSC plugin interface
 API_NAME = 'lease'
 API_VERSION_OPTION = 'os_lease_api_version'
 API_VERSIONS = {
-    '1.0': 'esileapclient.v1.client.Client',
+    '1': 'esileapclient.v1.client.Client',
 }
 
-OS_LEASE_API_LATEST = True
-LAST_KNOWN_API_VERSION = '1.0'
-LATEST_VERSION = '1.0'
+OS_LEAP_API_LATEST = True
+LAST_KNOWN_API_VERSION = '1'
+LATEST_VERSION = '1'
 
 
 LOG = logging.getLogger(__name__)
@@ -69,5 +70,14 @@ def build_option_parser(parser):
     :param argparse.ArgumentParser parser: The parser object that has been
         initialized by OpenStackShell.
     """
-
+    parser.add_argument(
+        '--os-lease-api-version',
+        metavar='<esileapclient-api-version>',
+        default=utils.env(
+            'OS_LEASE_API_VERSION',
+            default=DEFAULT_API_VERSION),
+        help='ESI Leap Client API version, default=' +
+             DEFAULT_API_VERSION +
+             ' (Env: OS_LEASE_API_VERSION)')
     return parser
+
