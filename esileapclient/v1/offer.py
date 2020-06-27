@@ -21,23 +21,25 @@ LOG = logging.getLogger(__name__)
 class Offer(base.Resource):
 
     detailed_fields = {
-        'end_date': "End Date",
+        'availabilities': "Availabilities",
+        'end_time': "End Time",
         'project_id': "Project ID",
         'properties': "Properties",
         'resource_type': "Resource Type",
         'resource_uuid': "Resource UUID",
-        'start_date': "Start Date",
+        'start_time': "Start Time",
         'status': "Status",
         'uuid': "UUID",
     }
 
     fields = {
         'uuid': "UUID",
-        'start_date': "Start Date",
-        'end_date': "End Date",
+        'start_time': "Start Time",
+        'end_time': "End Time",
         'resource_type': "Resource Type",
         'resource_uuid': "Resource UUID",
         'status': "Status",
+        'availabilities': "Availabilities",
     }
 
     def __repr__(self):
@@ -47,8 +49,8 @@ class Offer(base.Resource):
 class OfferManager(base.Manager):
     resource_class = Offer
     _creation_attributes = ['resource_type', 'resource_uuid',
-                            'start_date', 'end_date', 'status',
-                            'properties']
+                            'start_time', 'end_time', 'status',
+                            'project_id', 'properties']
 
     _resource_name = 'offers'
 
@@ -62,13 +64,17 @@ class OfferManager(base.Manager):
 
         return offer
 
-    def list(self, os_esileap_api_version=None):
+    def list(self, filters, os_esileap_api_version=None):
         """Retrieve a list of offers.
         :returns: A list of offers.
         """
 
-        path = ''
-        offers = self._list(self._path(path),
+        resource_id = ''
+
+        url_variables = OfferManager._url_variables(filters)
+        url = self._path(resource_id) + url_variables
+
+        offers = self._list(url,
                             os_esileap_api_version=os_esileap_api_version)
 
         if type(offers) is list:

@@ -44,18 +44,18 @@ class TestCreateLeaseContract(TestLeaseContract):
     def test_market_contract_create(self):
 
         arglist = [
-            '--end-date', lease_fakes.lease_end_date,
+            '--end-time', lease_fakes.lease_end_time,
             '--offer-uuid', lease_fakes.lease_offer_uuid,
             '--properties', lease_fakes.lease_properties,
-            '--start-date', lease_fakes.lease_start_date,
+            '--start-time', lease_fakes.lease_start_time,
             '--status', lease_fakes.lease_status,
         ]
 
         verifylist = [
-            ('end_date', lease_fakes.lease_end_date),
+            ('end_time', lease_fakes.lease_end_time),
             ('offer_uuid', lease_fakes.lease_offer_uuid),
             ('properties', lease_fakes.lease_properties),
-            ('start_date', lease_fakes.lease_start_date),
+            ('start_time', lease_fakes.lease_start_time),
             ('status', lease_fakes.lease_status),
         ]
 
@@ -64,10 +64,10 @@ class TestCreateLeaseContract(TestLeaseContract):
         self.cmd.take_action(parsed_args)
 
         args = {
-            'end_date': lease_fakes.lease_end_date,
+            'end_time': lease_fakes.lease_end_time,
             'offer_uuid': lease_fakes.lease_offer_uuid,
             'properties': json.loads(lease_fakes.lease_properties),
-            'start_date': lease_fakes.lease_start_date,
+            'start_time': lease_fakes.lease_start_time,
             'status': lease_fakes.lease_status,
         }
 
@@ -92,12 +92,24 @@ class TestLeaseContractList(TestLeaseContract):
         parsed_args = self.check_parser(self.cmd, arglist, verifylist)
         columns, data = self.cmd.take_action(parsed_args)
 
-        self.lease_mock.contract.list.assert_called_with()
+        filters = {
+            'status': parsed_args.status,
+            'offer_uuid': parsed_args.offer_uuid,
+            'start_time': str(parsed_args.time_range[0]) if
+            parsed_args.time_range else None,
+            'end_time': str(parsed_args.time_range[1]) if
+            parsed_args.time_range else None,
+            'project_id': parsed_args.project_id,
+            'owner': parsed_args.owner,
+            'view': 'all' if parsed_args.all else None
+        }
+
+        self.lease_mock.contract.list.assert_called_with(filters)
 
         collist = [
             "UUID",
-            "Start Date",
-            "End Date",
+            "Start Time",
+            "End Time",
             "Offer UUID",
             "Status",
         ]
@@ -105,8 +117,8 @@ class TestLeaseContractList(TestLeaseContract):
         self.assertEqual(collist, list(columns))
 
         datalist = ((lease_fakes.lease_contract_uuid,
-                     lease_fakes.lease_start_date,
-                     lease_fakes.lease_end_date,
+                     lease_fakes.lease_start_time,
+                     lease_fakes.lease_end_time,
                      lease_fakes.lease_offer_uuid,
                      lease_fakes.lease_status,
                      ),)
@@ -119,25 +131,37 @@ class TestLeaseContractList(TestLeaseContract):
         parsed_args = self.check_parser(self.cmd, arglist, verifylist)
         columns, data = self.cmd.take_action(parsed_args)
 
-        self.lease_mock.contract.list.assert_called_with()
+        filters = {
+            'status': parsed_args.status,
+            'offer_uuid': parsed_args.offer_uuid,
+            'start_time': str(parsed_args.time_range[0]) if
+            parsed_args.time_range else None,
+            'end_time': str(parsed_args.time_range[1]) if
+            parsed_args.time_range else None,
+            'project_id': parsed_args.project_id,
+            'owner': parsed_args.owner,
+            'view': 'all' if parsed_args.all else None
+        }
+
+        self.lease_mock.contract.list.assert_called_with(filters)
 
         long_collist = [
-            "End Date",
+            "End Time",
             "Offer UUID",
             "Project ID",
             "Properties",
-            "Start Date",
+            "Start Time",
             "Status",
             "UUID",
         ]
 
         self.assertEqual(long_collist, list(columns))
 
-        datalist = ((lease_fakes.lease_end_date,
+        datalist = ((lease_fakes.lease_end_time,
                      lease_fakes.lease_offer_uuid,
                      lease_fakes.lease_project_id,
                      json.loads(lease_fakes.lease_properties),
-                     lease_fakes.lease_start_date,
+                     lease_fakes.lease_start_time,
                      lease_fakes.lease_status,
                      lease_fakes.lease_contract_uuid
                      ),)
@@ -165,22 +189,22 @@ class TestLeaseContractShow(TestLeaseContract):
             lease_fakes.lease_contract_uuid)
 
         collist = (
-            "end_date",
+            "end_time",
             "offer_uuid",
             "project_id",
             "properties",
-            "start_date",
+            "start_time",
             "status",
             "uuid",
         )
 
         self.assertEqual(collist, columns)
 
-        datalist = (lease_fakes.lease_end_date,
+        datalist = (lease_fakes.lease_end_time,
                     lease_fakes.lease_offer_uuid,
                     lease_fakes.lease_project_id,
                     json.loads(lease_fakes.lease_properties),
-                    lease_fakes.lease_start_date,
+                    lease_fakes.lease_start_time,
                     lease_fakes.lease_status,
                     lease_fakes.lease_contract_uuid
                     )

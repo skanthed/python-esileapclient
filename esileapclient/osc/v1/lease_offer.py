@@ -30,8 +30,8 @@ class CreateLeaseOffer(command.ShowOne):
         parser = super(CreateLeaseOffer, self).get_parser(prog_name)
 
         parser.add_argument(
-            '--end-date',
-            dest='end_date',
+            '--end-time',
+            dest='end_time',
             required=False,
             help="Time when the offer will expire and no longer be "
                  "'available'.")
@@ -51,10 +51,18 @@ class CreateLeaseOffer(command.ShowOne):
             required=False,
             help='State which the offer should be created in.')
         parser.add_argument(
-            '--start-date',
-            dest='start_date',
+            '--start-time',
+            dest='start_time',
             required=False,
             help="Time when the offer will be made 'available'.")
+        parser.add_argument(
+            '--project-id',
+            dest='project_id',
+            required=False,
+            help="Project ID to assign ownership of the offer to."
+                 "If this attribute is not set, ESI-Leap will set the "
+                 "project_id to the id of the user which invoked the "
+                 "command.")
         parser.add_argument(
             '--properties',
             dest='properties',
@@ -98,12 +106,78 @@ class ListLeaseOffer(command.Lister):
             help="Show detailed information about the offers.",
             action='store_true')
 
+        parser.add_argument(
+            '--status',
+            dest='status',
+            required=False,
+            help="Show all offers with given status.")
+
+        parser.add_argument(
+            '--time-range',
+            dest='time_range',
+            nargs=2,
+            required=False,
+            help="Show all offers with start and end times "
+                 "which begin and end in the given range."
+                 "Must pass in two valid datetime strings."
+                 "Example: --time-range 2020-06-30T00:00:00"
+                 "2021-06-30T00:00:00")
+
+        parser.add_argument(
+            '--availability-range',
+            dest='availability_range',
+            nargs=2,
+            required=False,
+            help="Show all offers with availabilities "
+                 "which will have no conflicting contracts within "
+                 "the given range. Must pass in two valid datetime "
+                 "strings."
+                 "Example: --availability-range 2020-06-30T00:00:00"
+                 "2021-06-30T00:00:00")
+
+        parser.add_argument(
+            '--project-id',
+            dest='project_id',
+            required=False,
+            help="Show all offers owned by given project id.")
+
+        parser.add_argument(
+            '--resource-type',
+            dest='resource_type',
+            required=False,
+            help="Show all offers with given resource-type.")
+
+        parser.add_argument(
+            '--resource-uuid',
+            dest='resource_uuid',
+            required=False,
+            help="Show all offers with given resource-uuid.")
+
         return parser
 
     def take_action(self, parsed_args):
 
         lease_client = self.app.client_manager.lease
-        data = lease_client.offer.list()
+
+        filters = {
+            'status': parsed_args.status,
+
+            'start_time': str(parsed_args.time_range[0]) if
+            parsed_args.time_range else None,
+            'end_time': str(parsed_args.time_range[1]) if
+            parsed_args.time_range else None,
+
+            'available_start_time': str(parsed_args.availability_range[0]) if
+            parsed_args.availability_range else None,
+            'available_end_time': str(parsed_args.availability_range[1]) if
+            parsed_args.availability_range else None,
+
+            'project_id': parsed_args.project_id,
+            'resource_type': parsed_args.resource_type,
+            'resource_uuid': parsed_args.resource_uuid
+        }
+
+        data = lease_client.offer.list(filters)
 
         if parsed_args.long:
             columns = OFFER_RESOURCE.detailed_fields.keys()
