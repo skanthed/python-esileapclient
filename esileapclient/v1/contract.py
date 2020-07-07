@@ -21,19 +21,19 @@ LOG = logging.getLogger(__name__)
 class Contract(base.Resource):
 
     detailed_fields = {
-        'end_date': "End Date",
+        'end_time': "End Time",
         'offer_uuid': "Offer UUID",
         'project_id': "Project ID",
         'properties': "Properties",
-        'start_date': "Start Date",
+        'start_time': "Start Time",
         'status': "Status",
         'uuid': "UUID",
     }
 
     fields = {
         'uuid': "UUID",
-        'start_date': "Start Date",
-        'end_date': "End Date",
+        'start_time': "Start Time",
+        'end_time': "End Time",
         'offer_uuid': "Offer UUID",
         'status': "Status",
     }
@@ -44,7 +44,7 @@ class Contract(base.Resource):
 
 class ContractManager(base.Manager):
     resource_class = Contract
-    _creation_attributes = ['start_date', 'end_date', 'status',
+    _creation_attributes = ['start_time', 'end_time', 'status',
                             'offer_uuid', 'properties', 'project_id']
 
     _resource_name = 'contracts'
@@ -59,13 +59,17 @@ class ContractManager(base.Manager):
 
         return contract
 
-    def list(self, os_esileap_api_version=None):
+    def list(self, filters, os_esileap_api_version=None):
         """Retrieve a list of contracts.
         :returns: A list of contracts.
         """
 
-        path = ''
-        contracts = self._list(self._path(path),
+        resource_id = ""
+
+        url_variables = ContractManager._url_variables(filters)
+        url = self._path(resource_id) + url_variables
+
+        contracts = self._list(url,
                                os_esileap_api_version=os_esileap_api_version)
 
         if type(contracts) is list:

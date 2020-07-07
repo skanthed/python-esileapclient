@@ -15,34 +15,35 @@ import json
 
 from osc_lib.tests import utils
 
-
-lease_end_date = "3000-00-00T13"
+lease_availabilities = "[]"
+lease_end_time = "3000-00-00T13"
 lease_project_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 lease_properties = "{}"
 lease_resource_type = "dummy_node"
 lease_resource_uuid = "1213123123"
-lease_start_date = "2010"
+lease_start_time = "2010"
 lease_status = "fake_status"
 lease_contract_uuid = "9999999"
 lease_offer_uuid = "111111111"
 
 OFFER = {
-    'end_date': lease_end_date,
+    'availabilities': json.loads(lease_availabilities),
+    'end_time': lease_end_time,
     'project_id': lease_project_id,
     'properties': json.loads(lease_properties),
     'resource_type': lease_resource_type,
     'resource_uuid': lease_resource_uuid,
-    'start_date': lease_start_date,
+    'start_time': lease_start_time,
     'status': lease_status,
     'uuid': lease_offer_uuid
 }
 
 CONTRACT = {
-    'end_date': lease_end_date,
+    'end_time': lease_end_time,
     'offer_uuid': lease_offer_uuid,
     'project_id': lease_project_id,
     'properties': json.loads(lease_properties),
-    'start_date': lease_start_date,
+    'start_time': lease_start_time,
     'status': lease_status,
     'uuid': lease_contract_uuid
 }

@@ -11,7 +11,6 @@
 #    under the License.
 
 import logging
-import argparse
 
 from osc_lib import utils
 
@@ -76,8 +75,7 @@ def build_option_parser(parser):
         default=utils.env(
             'OS_LEASE_API_VERSION',
             default=DEFAULT_API_VERSION),
-        help='ESI Leap Client API version, default=' +
-             DEFAULT_API_VERSION +
-             ' (Env: OS_LEASE_API_VERSION)')
+        help=("ESI Leap Client API version, default=",
+              DEFAULT_API_VERSION,
+              " (Env: OS_LEASE_API_VERSION)"))
     return parser
-

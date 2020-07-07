@@ -17,6 +17,9 @@ Base utilities to build API operation managers and objects on top of.
 import logging
 import abc
 import six
+import json
+
+from osc_lib import exceptions
 
 
 LOG = logging.getLogger(__name__)
@@ -56,6 +59,16 @@ class Manager(object):
         return ('/v1/%s/%s' % (self._resource_name, resource_id)
                 if resource_id else '/v1/%s' % self._resource_name)
 
+    @staticmethod
+    def _url_variables(variables):
+        """Returns a url with variables set"""
+
+        url_variables = '?'
+        for k, v in variables.items():
+            if v is not None:
+                url_variables += k + '=' + v + '&'
+        return url_variables[:-1]
+
     def _create(self, os_esileap_api_version=None, **kwargs):
         """Create a resource based on a kwargs dictionary of attributes.
         :param kwargs: A dictionary containing the attributes of the resource
@@ -88,8 +101,7 @@ class Manager(object):
 
             return self.resource_class(self, body)
         else:
-            raise Exception("Could not create %s in esi-leap" %
-                            (self._resource_name, ))
+            raise exceptions.CommandError(json.loads(resp.text)['faultstring'])
 
     def _list(self, url, obj_class=None, os_esileap_api_version=None):
         if obj_class is None:
@@ -108,8 +120,7 @@ class Manager(object):
 
             return [obj_class(self, res) for res in body if res]
         else:
-            raise Exception("Could not get %s in esi-leap" %
-                            (self._resource_name, ))
+            raise exceptions.CommandError(json.loads(resp.text)['faultstring'])
 
     def _get(self, resource_id, obj_class=None, os_esileap_api_version=None):
         """Retrieve a resource.
@@ -134,8 +145,7 @@ class Manager(object):
             return obj_class(self, body)
 
         else:
-            raise Exception("No %s with uuid %s in esi-leap" %
-                            (self._resource_name, resource_id))
+            raise exceptions.CommandError(json.loads(resp.text)['faultstring'])
 
     def _delete(self, resource_id, os_esileap_api_version=None):
         """Delete a resource.
@@ -154,8 +164,7 @@ class Manager(object):
         resp, body = self.api.json_request('DELETE', url, **kwargs)
 
         if resp.status_code != 200:
-            raise Exception("No %s with uuid %s in esi-leap" %
-                            (self._resource_name, resource_id))
+            raise exceptions.CommandError(json.loads(resp.text)['faultstring'])
 
 
 @six.add_metaclass(abc.ABCMeta)

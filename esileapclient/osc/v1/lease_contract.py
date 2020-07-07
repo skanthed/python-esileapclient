@@ -30,8 +30,8 @@ class CreateLeaseContract(command.ShowOne):
         parser = super(CreateLeaseContract, self).get_parser(prog_name)
 
         parser.add_argument(
-            '--end-date',
-            dest='end_date',
+            '--end-time',
+            dest='end_time',
             required=False,
             help="Time when the contract will expire.")
         parser.add_argument(
@@ -45,10 +45,18 @@ class CreateLeaseContract(command.ShowOne):
             required=False,
             help='State which the offer should be created in.')
         parser.add_argument(
-            '--start-date',
-            dest='start_date',
+            '--start-time',
+            dest='start_time',
             required=False,
             help="Time when the resource will become usable.")
+        parser.add_argument(
+            '--project-id',
+            dest='project_id',
+            required=False,
+            help="Project ID to assign ownership of the contract to."
+                 "If this attribute is not set, ESI-Leap will set the "
+                 "project_id to the id of the user which invoked the "
+                 "command.")
         parser.add_argument(
             '--properties',
             dest='properties',
@@ -62,8 +70,7 @@ class CreateLeaseContract(command.ShowOne):
 
         lease_client = self.app.client_manager.lease
 
-        field_list = ['start_date', 'end_date',
-                      'status', 'offer_uuid', 'properties']
+        field_list = CONTRACT_RESOURCE.detailed_fields.keys()
 
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
@@ -93,12 +100,67 @@ class ListLeaseContract(command.Lister):
             help="Show detailed information about the contracts.",
             action='store_true')
 
+        parser.add_argument(
+            '--all',
+            default=False,
+            help="Show all contracts in the database. For admin use only.",
+            action='store_true')
+
+        parser.add_argument(
+            '--status',
+            dest='status',
+            required=False,
+            help="Show all contracts with given status.")
+
+        parser.add_argument(
+            '--offer_uuid',
+            dest='offer_uuid',
+            required=False,
+            help="Show all contracts with given offer_uuid.")
+
+        parser.add_argument(
+            '--time-range',
+            dest='time_range',
+            nargs=2,
+            required=False,
+            help="Show all contracts with start and end times "
+                 "which begin and end in the given range."
+                 "Must pass in two valid datetime strings."
+                 "Example: --time-range 2020-06-30T00:00:00"
+                 "2021-06-30T00:00:00")
+
+        parser.add_argument(
+            '--project-id',
+            dest='project_id',
+            required=False,
+            help="Show all contracts owned by given project id.")
+
+        parser.add_argument(
+            '--owner',
+            dest='owner',
+            required=False,
+            help="Show all contracts relevant to an offer owner "
+                 "by the owner's project_id.")
+
         return parser
 
     def take_action(self, parsed_args):
 
         lease_client = self.app.client_manager.lease
-        data = lease_client.contract.list()
+
+        filters = {
+            'status': parsed_args.status,
+            'offer_uuid': parsed_args.offer_uuid,
+            'start_time': str(parsed_args.time_range[0]) if
+            parsed_args.time_range else None,
+            'end_time': str(parsed_args.time_range[1]) if
+            parsed_args.time_range else None,
+            'project_id': parsed_args.project_id,
+            'owner': parsed_args.owner,
+            'view': 'all' if parsed_args.all else None
+        }
+
+        data = lease_client.contract.list(filters)
 
         if parsed_args.long:
             columns = CONTRACT_RESOURCE.detailed_fields.keys()
