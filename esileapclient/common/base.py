@@ -161,7 +161,7 @@ class Manager(object):
             kwargs['headers'] = {'X-OpenStack-ESI-Leap-API-Version':
                                  os_esileap_api_version}
 
-        resp, body = self.api.json_request('DELETE', url, **kwargs)
+        resp, _ = self.api.json_request('DELETE', url, **kwargs)
 
         if resp.status_code != 200:
             raise exceptions.CommandError(json.loads(resp.text)['faultstring'])
