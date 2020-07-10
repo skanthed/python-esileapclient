@@ -113,7 +113,7 @@ class ListLeaseContract(command.Lister):
             help="Show all contracts with given status.")
 
         parser.add_argument(
-            '--offer_uuid',
+            '--offer-uuid',
             dest='offer_uuid',
             required=False,
             help="Show all contracts with given offer_uuid.")
