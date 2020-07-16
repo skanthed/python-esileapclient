@@ -45,6 +45,7 @@ class TestCreateLeaseContract(TestLeaseContract):
 
         arglist = [
             '--end-time', lease_fakes.lease_end_time,
+            '--name', lease_fakes.lease_contract_name,
             '--offer-uuid', lease_fakes.lease_offer_uuid,
             '--properties', lease_fakes.lease_properties,
             '--start-time', lease_fakes.lease_start_time,
@@ -53,6 +54,7 @@ class TestCreateLeaseContract(TestLeaseContract):
 
         verifylist = [
             ('end_time', lease_fakes.lease_end_time),
+            ('name', lease_fakes.lease_contract_name),
             ('offer_uuid', lease_fakes.lease_offer_uuid),
             ('properties', lease_fakes.lease_properties),
             ('start_time', lease_fakes.lease_start_time),
@@ -65,6 +67,7 @@ class TestCreateLeaseContract(TestLeaseContract):
 
         args = {
             'end_time': lease_fakes.lease_end_time,
+            'name': lease_fakes.lease_contract_name,
             'offer_uuid': lease_fakes.lease_offer_uuid,
             'properties': json.loads(lease_fakes.lease_properties),
             'start_time': lease_fakes.lease_start_time,
@@ -108,6 +111,7 @@ class TestLeaseContractList(TestLeaseContract):
 
         collist = [
             "UUID",
+            "Name",
             "Start Time",
             "End Time",
             "Offer UUID",
@@ -117,6 +121,7 @@ class TestLeaseContractList(TestLeaseContract):
         self.assertEqual(collist, list(columns))
 
         datalist = ((lease_fakes.lease_contract_uuid,
+                     lease_fakes.lease_contract_name,
                      lease_fakes.lease_start_time,
                      lease_fakes.lease_end_time,
                      lease_fakes.lease_offer_uuid,
@@ -147,6 +152,7 @@ class TestLeaseContractList(TestLeaseContract):
 
         long_collist = [
             "End Time",
+            "Name",
             "Offer UUID",
             "Project ID",
             "Properties",
@@ -158,6 +164,7 @@ class TestLeaseContractList(TestLeaseContract):
         self.assertEqual(long_collist, list(columns))
 
         datalist = ((lease_fakes.lease_end_time,
+                     lease_fakes.lease_contract_name,
                      lease_fakes.lease_offer_uuid,
                      lease_fakes.lease_project_id,
                      json.loads(lease_fakes.lease_properties),
@@ -190,6 +197,7 @@ class TestLeaseContractShow(TestLeaseContract):
 
         collist = (
             "end_time",
+            "name",
             "offer_uuid",
             "project_id",
             "properties",
@@ -201,6 +209,7 @@ class TestLeaseContractShow(TestLeaseContract):
         self.assertEqual(collist, columns)
 
         datalist = (lease_fakes.lease_end_time,
+                    lease_fakes.lease_contract_name,
                     lease_fakes.lease_offer_uuid,
                     lease_fakes.lease_project_id,
                     json.loads(lease_fakes.lease_properties),
