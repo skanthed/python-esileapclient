@@ -44,16 +44,16 @@ class Offer(base.Resource):
         'availabilities': "Availabilities",
     }
 
+    _creation_attributes = ['resource_type', 'resource_uuid',
+                            'start_time', 'end_time', 'status',
+                            'project_id', 'properties', 'name']
+
     def __repr__(self):
         return "<Offer %s>" % self._info
 
 
 class OfferManager(base.Manager):
     resource_class = Offer
-    _creation_attributes = ['resource_type', 'resource_uuid',
-                            'start_time', 'end_time', 'status',
-                            'project_id', 'properties', 'name']
-
     _resource_name = 'offers'
 
     def create(self, os_esileap_api_version=None, **kwargs):

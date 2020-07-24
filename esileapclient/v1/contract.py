@@ -40,15 +40,15 @@ class Contract(base.Resource):
         'status': "Status",
     }
 
+    _creation_attributes = ['start_time', 'end_time', 'status', 'name',
+                            'offer_uuid_or_name', 'properties', 'project_id']
+
     def __repr__(self):
         return "<Contract %s>" % self._info
 
 
 class ContractManager(base.Manager):
     resource_class = Contract
-    _creation_attributes = ['start_time', 'end_time', 'status', 'name',
-                            'offer_uuid', 'properties', 'project_id']
-
     _resource_name = 'contracts'
 
     def create(self, os_esileap_api_version=None, **kwargs):
