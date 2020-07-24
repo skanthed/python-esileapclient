@@ -23,6 +23,7 @@ class Offer(base.Resource):
     detailed_fields = {
         'availabilities': "Availabilities",
         'end_time': "End Time",
+        'name': "Name",
         'project_id': "Project ID",
         'properties': "Properties",
         'resource_type': "Resource Type",
@@ -34,6 +35,7 @@ class Offer(base.Resource):
 
     fields = {
         'uuid': "UUID",
+        'name': "Name",
         'start_time': "Start Time",
         'end_time': "End Time",
         'resource_type': "Resource Type",
@@ -50,7 +52,7 @@ class OfferManager(base.Manager):
     resource_class = Offer
     _creation_attributes = ['resource_type', 'resource_uuid',
                             'start_time', 'end_time', 'status',
-                            'project_id', 'properties']
+                            'project_id', 'properties', 'name']
 
     _resource_name = 'offers'
 

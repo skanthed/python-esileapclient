@@ -35,6 +35,11 @@ class CreateLeaseContract(command.ShowOne):
             required=False,
             help="Time when the contract will expire.")
         parser.add_argument(
+            '--name',
+            dest='name',
+            required=False,
+            help="Name of the contract being created. ")
+        parser.add_argument(
             '--offer-uuid',
             dest='offer_uuid',
             required=True,
@@ -89,7 +94,7 @@ class CreateLeaseContract(command.ShowOne):
 class ListLeaseContract(command.Lister):
     """List lease contracts."""
 
-    log = logging.getLogger(__name__ + ".ListLeaseContrct")
+    log = logging.getLogger(__name__ + ".ListLeaseContract")
 
     def get_parser(self, prog_name):
         parser = super(ListLeaseContract, self).get_parser(prog_name)

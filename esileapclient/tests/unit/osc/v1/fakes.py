@@ -25,10 +25,13 @@ lease_start_time = "2010"
 lease_status = "fake_status"
 lease_contract_uuid = "9999999"
 lease_offer_uuid = "111111111"
+lease_offer_name = "o1"
+lease_contract_name = "c1"
 
 OFFER = {
     'availabilities': json.loads(lease_availabilities),
     'end_time': lease_end_time,
+    'name': lease_offer_name,
     'project_id': lease_project_id,
     'properties': json.loads(lease_properties),
     'resource_type': lease_resource_type,
@@ -40,6 +43,7 @@ OFFER = {
 
 CONTRACT = {
     'end_time': lease_end_time,
+    'name': lease_contract_name,
     'offer_uuid': lease_offer_uuid,
     'project_id': lease_project_id,
     'properties': json.loads(lease_properties),

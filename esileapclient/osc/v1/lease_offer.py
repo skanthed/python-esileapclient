@@ -36,6 +36,11 @@ class CreateLeaseOffer(command.ShowOne):
             help="Time when the offer will expire and no longer be "
                  "'available'.")
         parser.add_argument(
+            '--name',
+            dest='name',
+            required=False,
+            help="Name of the offer being created. ")
+        parser.add_argument(
             '--resource-type',
             dest='resource_type',
             required=True,

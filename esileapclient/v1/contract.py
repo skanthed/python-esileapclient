@@ -22,6 +22,7 @@ class Contract(base.Resource):
 
     detailed_fields = {
         'end_time': "End Time",
+        'name': "Name",
         'offer_uuid': "Offer UUID",
         'project_id': "Project ID",
         'properties': "Properties",
@@ -32,6 +33,7 @@ class Contract(base.Resource):
 
     fields = {
         'uuid': "UUID",
+        'name': "Name",
         'start_time': "Start Time",
         'end_time': "End Time",
         'offer_uuid': "Offer UUID",
@@ -44,7 +46,7 @@ class Contract(base.Resource):
 
 class ContractManager(base.Manager):
     resource_class = Contract
-    _creation_attributes = ['start_time', 'end_time', 'status',
+    _creation_attributes = ['start_time', 'end_time', 'status', 'name',
                             'offer_uuid', 'properties', 'project_id']
 
     _resource_name = 'contracts'
