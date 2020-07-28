@@ -40,10 +40,10 @@ class CreateLeaseContract(command.ShowOne):
             required=False,
             help="Name of the contract being created. ")
         parser.add_argument(
-            '--offer-uuid',
-            dest='offer_uuid',
+            '--offer',
+            dest='offer_uuid_or_name',
             required=True,
-            help="UUID of the offer")
+            help="Name or UUID of the offer")
         parser.add_argument(
             '--status',
             dest='status',
@@ -75,7 +75,7 @@ class CreateLeaseContract(command.ShowOne):
 
         lease_client = self.app.client_manager.lease
 
-        field_list = CONTRACT_RESOURCE.detailed_fields.keys()
+        field_list = CONTRACT_RESOURCE._creation_attributes
 
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
@@ -104,25 +104,21 @@ class ListLeaseContract(command.Lister):
             default=False,
             help="Show detailed information about the contracts.",
             action='store_true')
-
         parser.add_argument(
             '--all',
             default=False,
             help="Show all contracts in the database. For admin use only.",
             action='store_true')
-
         parser.add_argument(
             '--status',
             dest='status',
             required=False,
             help="Show all contracts with given status.")
-
         parser.add_argument(
             '--offer-uuid',
             dest='offer_uuid',
             required=False,
             help="Show all contracts with given offer_uuid.")
-
         parser.add_argument(
             '--time-range',
             dest='time_range',
@@ -133,13 +129,11 @@ class ListLeaseContract(command.Lister):
                  "Must pass in two valid datetime strings."
                  "Example: --time-range 2020-06-30T00:00:00"
                  "2021-06-30T00:00:00")
-
         parser.add_argument(
             '--project-id',
             dest='project_id',
             required=False,
             help="Show all contracts owned by given project id.")
-
         parser.add_argument(
             '--owner',
             dest='owner',

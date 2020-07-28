@@ -71,13 +71,14 @@ class TestableResource(base.Resource):
         'attribute3': 'Attribute 3',
     }
 
+    _creation_attributes = ['attribute1', 'attribute2']
+
     def __repr__(self):
         return "<TestableResource %s>" % self._info
 
 
 class TestableManager(base.Manager):
     resource_class = TestableResource
-    _creation_attributes = ['attribute1', 'attribute2']
     _resource_name = 'testableresources'
 
 

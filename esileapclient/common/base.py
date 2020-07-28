@@ -41,12 +41,6 @@ class Manager(object):
         """The resource name.
         """
 
-    @property
-    @abc.abstractmethod
-    def _creation_attributes(self):
-        """A list of required creation attributes for a resource type.
-        """
-
     def __init__(self, api):
         self.api = api
 
@@ -78,7 +72,7 @@ class Manager(object):
         new = {}
         invalid = []
         for (key, value) in kwargs.items():
-            if key in self._creation_attributes:
+            if key in self.resource_class._creation_attributes:
                 new[key] = value
             else:
                 invalid.append(key)
@@ -184,6 +178,12 @@ class Resource(object):
     def detailed_fields(self):
         """A dictionary of all attributes to be displayed in a
         detailed request"""
+
+    @property
+    @abc.abstractmethod
+    def _creation_attributes(self):
+        """A list of required creation attributes for a resource type.
+        """
 
     def __init__(self, manager, info):
         """Populate and bind to a manager.

@@ -46,7 +46,7 @@ class TestCreateLeaseContract(TestLeaseContract):
         arglist = [
             '--end-time', lease_fakes.lease_end_time,
             '--name', lease_fakes.lease_contract_name,
-            '--offer-uuid', lease_fakes.lease_offer_uuid,
+            '--offer', lease_fakes.lease_offer_uuid,
             '--properties', lease_fakes.lease_properties,
             '--start-time', lease_fakes.lease_start_time,
             '--status', lease_fakes.lease_status,
@@ -55,7 +55,7 @@ class TestCreateLeaseContract(TestLeaseContract):
         verifylist = [
             ('end_time', lease_fakes.lease_end_time),
             ('name', lease_fakes.lease_contract_name),
-            ('offer_uuid', lease_fakes.lease_offer_uuid),
+            ('offer_uuid_or_name', lease_fakes.lease_offer_uuid),
             ('properties', lease_fakes.lease_properties),
             ('start_time', lease_fakes.lease_start_time),
             ('status', lease_fakes.lease_status),
@@ -68,7 +68,7 @@ class TestCreateLeaseContract(TestLeaseContract):
         args = {
             'end_time': lease_fakes.lease_end_time,
             'name': lease_fakes.lease_contract_name,
-            'offer_uuid': lease_fakes.lease_offer_uuid,
+            'offer_uuid_or_name': lease_fakes.lease_offer_uuid,
             'properties': json.loads(lease_fakes.lease_properties),
             'start_time': lease_fakes.lease_start_time,
             'status': lease_fakes.lease_status,
