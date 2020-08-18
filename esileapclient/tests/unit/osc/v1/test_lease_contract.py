@@ -152,6 +152,8 @@ class TestLeaseContractList(TestLeaseContract):
 
         long_collist = [
             "End Time",
+            "Expire Time",
+            "Fulfill Time",
             "Name",
             "Offer UUID",
             "Project ID",
@@ -164,6 +166,8 @@ class TestLeaseContractList(TestLeaseContract):
         self.assertEqual(long_collist, list(columns))
 
         datalist = ((lease_fakes.lease_end_time,
+                     lease_fakes.lease_expire_time,
+                     lease_fakes.lease_fulfill_time,
                      lease_fakes.lease_contract_name,
                      lease_fakes.lease_offer_uuid,
                      lease_fakes.lease_project_id,
@@ -197,6 +201,8 @@ class TestLeaseContractShow(TestLeaseContract):
 
         collist = (
             "end_time",
+            "expire_time",
+            "fulfill_time",
             "name",
             "offer_uuid",
             "project_id",
@@ -209,6 +215,8 @@ class TestLeaseContractShow(TestLeaseContract):
         self.assertEqual(collist, columns)
 
         datalist = (lease_fakes.lease_end_time,
+                    lease_fakes.lease_expire_time,
+                    lease_fakes.lease_fulfill_time,
                     lease_fakes.lease_contract_name,
                     lease_fakes.lease_offer_uuid,
                     lease_fakes.lease_project_id,

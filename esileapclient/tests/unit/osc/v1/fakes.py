@@ -17,11 +17,13 @@ from osc_lib.tests import utils
 
 lease_availabilities = "[]"
 lease_end_time = "3000-00-00T13"
+lease_expire_time = "3000-00-00T13"
 lease_project_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 lease_properties = "{}"
 lease_resource_type = "dummy_node"
 lease_resource_uuid = "1213123123"
 lease_start_time = "2010"
+lease_fulfill_time = "2010"
 lease_status = "fake_status"
 lease_contract_uuid = "9999999"
 lease_offer_uuid = "111111111"
@@ -43,6 +45,8 @@ OFFER = {
 
 CONTRACT = {
     'end_time': lease_end_time,
+    'expire_time': lease_expire_time,
+    'fulfill_time': lease_fulfill_time,
     'name': lease_contract_name,
     'offer_uuid': lease_offer_uuid,
     'project_id': lease_project_id,

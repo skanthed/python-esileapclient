@@ -22,6 +22,8 @@ class Contract(base.Resource):
 
     detailed_fields = {
         'end_time': "End Time",
+        'expire_time': "Expire Time",
+        'fulfill_time': "Fulfill Time",
         'name': "Name",
         'offer_uuid': "Offer UUID",
         'project_id': "Project ID",
