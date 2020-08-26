@@ -24,7 +24,7 @@ API_VERSIONS = {
     '1': 'esileapclient.v1.client.Client',
 }
 
-OS_LEAP_API_LATEST = True
+OS_LEASE_API_LATEST = True
 LAST_KNOWN_API_VERSION = '1'
 LATEST_VERSION = '1'
 
@@ -69,13 +69,4 @@ def build_option_parser(parser):
     :param argparse.ArgumentParser parser: The parser object that has been
         initialized by OpenStackShell.
     """
-    parser.add_argument(
-        '--os-lease-api-version',
-        metavar='<esileapclient-api-version>',
-        default=utils.env(
-            'OS_LEASE_API_VERSION',
-            default=DEFAULT_API_VERSION),
-        help=("ESI Leap Client API version, default=",
-              DEFAULT_API_VERSION,
-              " (Env: OS_LEASE_API_VERSION)"))
     return parser
