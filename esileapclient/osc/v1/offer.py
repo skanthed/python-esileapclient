@@ -21,13 +21,13 @@ from esileapclient.v1.offer import Offer as OFFER_RESOURCE
 LOG = logging.getLogger(__name__)
 
 
-class CreateLeaseOffer(command.ShowOne):
-    """Create a new lease offer."""
+class CreateOffer(command.ShowOne):
+    """Create a new offer."""
 
-    log = logging.getLogger(__name__ + ".CreateLeaseOffer")
+    log = logging.getLogger(__name__ + ".CreateOffer")
 
     def get_parser(self, prog_name):
-        parser = super(CreateLeaseOffer, self).get_parser(prog_name)
+        parser = super(CreateOffer, self).get_parser(prog_name)
 
         parser.add_argument(
             '--end-time',
@@ -79,7 +79,7 @@ class CreateLeaseOffer(command.ShowOne):
 
     def take_action(self, parsed_args):
 
-        lease_client = self.app.client_manager.lease
+        client = self.app.client_manager.lease
 
         field_list = OFFER_RESOURCE._creation_attributes
 
@@ -89,7 +89,7 @@ class CreateLeaseOffer(command.ShowOne):
         if 'properties' in fields:
             fields['properties'] = json.loads(fields['properties'])
 
-        offer = lease_client.offer.create(**fields)
+        offer = client.offer.create(**fields)
 
         data = dict([(f, getattr(offer, f, '')) for f in
                     OFFER_RESOURCE.fields])
@@ -97,13 +97,13 @@ class CreateLeaseOffer(command.ShowOne):
         return self.dict2columns(data)
 
 
-class ListLeaseOffer(command.Lister):
-    """List lease offers."""
+class ListOffer(command.Lister):
+    """List offers."""
 
-    log = logging.getLogger(__name__ + ".ListLeaseOffer")
+    log = logging.getLogger(__name__ + ".ListOffer")
 
     def get_parser(self, prog_name):
-        parser = super(ListLeaseOffer, self).get_parser(prog_name)
+        parser = super(ListOffer, self).get_parser(prog_name)
 
         parser.add_argument(
             '--long',
@@ -131,7 +131,7 @@ class ListLeaseOffer(command.Lister):
             nargs=2,
             required=False,
             help="Show all offers with availabilities "
-                 "which will have no conflicting contracts within "
+                 "which will have no conflicting leases within "
                  "the given range. Must pass in two valid datetime "
                  "strings."
                  "Example: --availability-range 2020-06-30T00:00:00"
@@ -156,7 +156,7 @@ class ListLeaseOffer(command.Lister):
 
     def take_action(self, parsed_args):
 
-        lease_client = self.app.client_manager.lease
+        client = self.app.client_manager.lease
 
         filters = {
             'status': parsed_args.status,
@@ -176,7 +176,7 @@ class ListLeaseOffer(command.Lister):
             'resource_uuid': parsed_args.resource_uuid
         }
 
-        data = lease_client.offer.list(filters)
+        data = client.offer.list(filters)
 
         if parsed_args.long:
             columns = OFFER_RESOURCE.detailed_fields.keys()
@@ -189,13 +189,13 @@ class ListLeaseOffer(command.Lister):
                 (oscutils.get_item_properties(s, columns) for s in data))
 
 
-class ShowLeaseOffer(command.ShowOne):
-    """Show lease offer details."""
+class ShowOffer(command.ShowOne):
+    """Show offer details."""
 
-    log = logging.getLogger(__name__ + ".ShowLeaseOffer")
+    log = logging.getLogger(__name__ + ".ShowOffer")
 
     def get_parser(self, prog_name):
-        parser = super(ShowLeaseOffer, self).get_parser(prog_name)
+        parser = super(ShowOffer, self).get_parser(prog_name)
         parser.add_argument(
             "uuid",
             metavar="<uuid>",
@@ -205,20 +205,20 @@ class ShowLeaseOffer(command.ShowOne):
 
     def take_action(self, parsed_args):
 
-        lease_client = self.app.client_manager.lease
+        client = self.app.client_manager.lease
 
-        offer = lease_client.offer.get(parsed_args.uuid)._info
+        offer = client.offer.get(parsed_args.uuid)._info
 
         return zip(*sorted(offer.items()))
 
 
-class DeleteLeaseOffer(command.Command):
-    """Unregister lease offer"""
+class DeleteOffer(command.Command):
+    """Unregister offer"""
 
-    log = logging.getLogger(__name__ + ".DeleteLeaseOffer")
+    log = logging.getLogger(__name__ + ".DeleteOffer")
 
     def get_parser(self, prog_name):
-        parser = super(DeleteLeaseOffer, self).get_parser(prog_name)
+        parser = super(DeleteOffer, self).get_parser(prog_name)
         parser.add_argument(
             "uuid",
             metavar="<uuid>",
@@ -228,6 +228,6 @@ class DeleteLeaseOffer(command.Command):
 
     def take_action(self, parsed_args):
 
-        lease_client = self.app.client_manager.lease
-        lease_client.offer.delete(parsed_args.uuid)
+        client = self.app.client_manager.lease
+        client.offer.delete(parsed_args.uuid)
         print('Deleted offer %s' % parsed_args.uuid)

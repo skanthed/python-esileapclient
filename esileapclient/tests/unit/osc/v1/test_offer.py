@@ -14,53 +14,53 @@ import copy
 import json
 from osc_lib.tests import utils as osctestutils
 
-from esileapclient.osc.v1 import lease_offer
-from esileapclient.tests.unit.osc.v1 import fakes as lease_fakes
+from esileapclient.osc.v1 import offer
+from esileapclient.tests.unit.osc.v1 import fakes
 
 
-class TestLeaseOffer(lease_fakes.TestLease):
+class TestOffer(fakes.TestLease):
 
     def setUp(self):
-        super(TestLeaseOffer, self).setUp()
+        super(TestOffer, self).setUp()
 
         self.lease_mock = self.app.client_manager.lease
         self.lease_mock.reset_mock()
 
 
-class TestLeaseOfferCreate(TestLeaseOffer):
+class TestOfferCreate(TestOffer):
 
     def setUp(self):
-        super(TestLeaseOfferCreate, self).setUp()
+        super(TestOfferCreate, self).setUp()
 
         self.lease_mock.offer.create.return_value = (
-            lease_fakes.FakeLeaseResource(
+            fakes.FakeLeaseResource(
                 None,
-                copy.deepcopy(lease_fakes.OFFER)
+                copy.deepcopy(fakes.OFFER)
             ))
 
         # Get the command object to test
-        self.cmd = lease_offer.CreateLeaseOffer(self.app, None)
+        self.cmd = offer.CreateOffer(self.app, None)
 
     def test_market_offer_create(self):
 
         arglist = [
-            '--end-time', lease_fakes.lease_end_time,
-            '--name', lease_fakes.lease_offer_name,
-            '--properties', lease_fakes.lease_properties,
-            '--resource-type', lease_fakes.lease_resource_type,
-            '--resource-uuid', lease_fakes.lease_resource_uuid,
-            '--start-time', lease_fakes.lease_start_time,
-            '--status', lease_fakes.lease_status,
+            '--end-time', fakes.lease_end_time,
+            '--name', fakes.offer_name,
+            '--properties', fakes.lease_properties,
+            '--resource-type', fakes.lease_resource_type,
+            '--resource-uuid', fakes.lease_resource_uuid,
+            '--start-time', fakes.lease_start_time,
+            '--status', fakes.lease_status,
         ]
 
         verifylist = [
-            ('end_time', lease_fakes.lease_end_time),
-            ('name', lease_fakes.lease_offer_name),
-            ('properties', lease_fakes.lease_properties),
-            ('resource_type', lease_fakes.lease_resource_type),
-            ('resource_uuid', lease_fakes.lease_resource_uuid),
-            ('start_time', lease_fakes.lease_start_time),
-            ('status', lease_fakes.lease_status),
+            ('end_time', fakes.lease_end_time),
+            ('name', fakes.offer_name),
+            ('properties', fakes.lease_properties),
+            ('resource_type', fakes.lease_resource_type),
+            ('resource_uuid', fakes.lease_resource_uuid),
+            ('start_time', fakes.lease_start_time),
+            ('status', fakes.lease_status),
         ]
 
         parsed_args = self.check_parser(self.cmd, arglist, verifylist)
@@ -68,30 +68,30 @@ class TestLeaseOfferCreate(TestLeaseOffer):
         self.cmd.take_action(parsed_args)
 
         args = {
-            'end_time': lease_fakes.lease_end_time,
-            'name': lease_fakes.lease_offer_name,
-            'properties': json.loads(lease_fakes.lease_properties),
-            'resource_type': lease_fakes.lease_resource_type,
-            'resource_uuid': lease_fakes.lease_resource_uuid,
-            'start_time': lease_fakes.lease_start_time,
-            'status': lease_fakes.lease_status,
+            'end_time': fakes.lease_end_time,
+            'name': fakes.offer_name,
+            'properties': json.loads(fakes.lease_properties),
+            'resource_type': fakes.lease_resource_type,
+            'resource_uuid': fakes.lease_resource_uuid,
+            'start_time': fakes.lease_start_time,
+            'status': fakes.lease_status,
         }
 
         self.lease_mock.offer.create.assert_called_once_with(**args)
 
 
-class TestLeaseOfferList(TestLeaseOffer):
+class TestOfferList(TestOffer):
     def setUp(self):
-        super(TestLeaseOfferList, self).setUp()
+        super(TestOfferList, self).setUp()
 
         self.lease_mock.offer.list.return_value = [
-            lease_fakes.FakeLeaseResource(
+            fakes.FakeLeaseResource(
                 None,
-                copy.deepcopy(lease_fakes.OFFER))
+                copy.deepcopy(fakes.OFFER))
         ]
-        self.cmd = lease_offer.ListLeaseOffer(self.app, None)
+        self.cmd = offer.ListOffer(self.app, None)
 
-    def test_lease_offer_list(self):
+    def test_offer_list(self):
         arglist = []
         verifylist = []
 
@@ -128,18 +128,18 @@ class TestLeaseOfferList(TestLeaseOffer):
 
         self.assertEqual(collist, list(columns))
 
-        datalist = ((lease_fakes.lease_offer_uuid,
-                     lease_fakes.lease_offer_name,
-                     lease_fakes.lease_start_time,
-                     lease_fakes.lease_end_time,
-                     lease_fakes.lease_resource_type,
-                     lease_fakes.lease_resource_uuid,
-                     lease_fakes.lease_status,
-                     json.loads(lease_fakes.lease_availabilities)
+        datalist = ((fakes.offer_uuid,
+                     fakes.offer_name,
+                     fakes.lease_start_time,
+                     fakes.lease_end_time,
+                     fakes.lease_resource_type,
+                     fakes.lease_resource_uuid,
+                     fakes.lease_status,
+                     json.loads(fakes.lease_availabilities)
                      ),)
         self.assertEqual(datalist, tuple(data))
 
-    def test_lease_offer_list_long(self):
+    def test_offer_list_long(self):
         arglist = ['--long']
         verifylist = [('long', True)]
 
@@ -178,39 +178,39 @@ class TestLeaseOfferList(TestLeaseOffer):
 
         self.assertEqual(long_collist, list(columns))
 
-        datalist = ((json.loads(lease_fakes.lease_availabilities),
-                     lease_fakes.lease_end_time,
-                     lease_fakes.lease_offer_name,
-                     lease_fakes.lease_project_id,
-                     json.loads(lease_fakes.lease_properties),
-                     lease_fakes.lease_resource_type,
-                     lease_fakes.lease_resource_uuid,
-                     lease_fakes.lease_start_time,
-                     lease_fakes.lease_status,
-                     lease_fakes.lease_offer_uuid
+        datalist = ((json.loads(fakes.lease_availabilities),
+                     fakes.lease_end_time,
+                     fakes.offer_name,
+                     fakes.lease_project_id,
+                     json.loads(fakes.lease_properties),
+                     fakes.lease_resource_type,
+                     fakes.lease_resource_uuid,
+                     fakes.lease_start_time,
+                     fakes.lease_status,
+                     fakes.offer_uuid
                      ),)
         self.assertEqual(datalist, tuple(data))
 
 
-class TestLeaseOfferShow(TestLeaseOffer):
+class TestOfferShow(TestOffer):
     def setUp(self):
-        super(TestLeaseOfferShow, self).setUp()
+        super(TestOfferShow, self).setUp()
 
         self.lease_mock.offer.get.return_value = \
-            lease_fakes.FakeLeaseResource(None,
-                                          copy.deepcopy(lease_fakes.OFFER))
+            fakes.FakeLeaseResource(None,
+                                    copy.deepcopy(fakes.OFFER))
 
-        self.cmd = lease_offer.ShowLeaseOffer(self.app, None)
+        self.cmd = offer.ShowOffer(self.app, None)
 
     def test_market_offer_show(self):
-        arglist = [lease_fakes.lease_offer_uuid]
-        verifylist = [('uuid', lease_fakes.lease_offer_uuid)]
+        arglist = [fakes.offer_uuid]
+        verifylist = [('uuid', fakes.offer_uuid)]
 
         parsed_args = self.check_parser(self.cmd, arglist, verifylist)
         columns, data = self.cmd.take_action(parsed_args)
 
         self.lease_mock.offer.get.assert_called_once_with(
-            lease_fakes.lease_offer_uuid)
+            fakes.offer_uuid)
 
         collist = (
             "availabilities",
@@ -227,20 +227,20 @@ class TestLeaseOfferShow(TestLeaseOffer):
 
         self.assertEqual(collist, columns)
 
-        datalist = (json.loads(lease_fakes.lease_availabilities),
-                    lease_fakes.lease_end_time,
-                    lease_fakes.lease_offer_name,
-                    lease_fakes.lease_project_id,
-                    json.loads(lease_fakes.lease_properties),
-                    lease_fakes.lease_resource_type,
-                    lease_fakes.lease_resource_uuid,
-                    lease_fakes.lease_start_time,
-                    lease_fakes.lease_status,
-                    lease_fakes.lease_offer_uuid
+        datalist = (json.loads(fakes.lease_availabilities),
+                    fakes.lease_end_time,
+                    fakes.offer_name,
+                    fakes.lease_project_id,
+                    json.loads(fakes.lease_properties),
+                    fakes.lease_resource_type,
+                    fakes.lease_resource_uuid,
+                    fakes.lease_start_time,
+                    fakes.lease_status,
+                    fakes.offer_uuid
                     )
         self.assertEqual(datalist, tuple(data))
 
-    def test_lease_offer_show_no_id(self):
+    def test_offer_show_no_id(self):
         arglist = []
         verifylist = []
         self.assertRaises(osctestutils.ParserException,
@@ -248,23 +248,23 @@ class TestLeaseOfferShow(TestLeaseOffer):
                           self.cmd, arglist, verifylist)
 
 
-class TestLeaseOfferDelete(TestLeaseOffer):
+class TestOfferDelete(TestOffer):
     def setUp(self):
-        super(TestLeaseOfferDelete, self).setUp()
+        super(TestOfferDelete, self).setUp()
 
-        self.cmd = lease_offer.DeleteLeaseOffer(self.app, None)
+        self.cmd = offer.DeleteOffer(self.app, None)
 
-    def test_lease_offer_delete(self):
-        arglist = [lease_fakes.lease_offer_uuid]
-        verifylist = [('uuid', lease_fakes.lease_offer_uuid)]
+    def test_offer_delete(self):
+        arglist = [fakes.offer_uuid]
+        verifylist = [('uuid', fakes.offer_uuid)]
 
         parsed_args = self.check_parser(self.cmd, arglist, verifylist)
         self.cmd.take_action(parsed_args)
 
         self.lease_mock.offer.delete.assert_called_once_with(
-            lease_fakes.lease_offer_uuid)
+            fakes.offer_uuid)
 
-    def test_lease_offer_delete_no_id(self):
+    def test_offer_delete_no_id(self):
         arglist = []
         verifylist = []
         self.assertRaises(osctestutils.ParserException,
