@@ -23,19 +23,19 @@ To install this package,
 
 Examples:
 
-    openstack lease offer list
+    openstack esi offer list
 
 will make a GET request to ESI-Leap and print to screen a list of all the offers in the ESI-Leap database.
 
-    openstack lease offer show <uuid>
+    openstack esi offer show <uuid>
 
 will make a GET request and print fields for offer with the given uuid.
 
-    openstack lease offer create --resource-type dummy_node --resource-uuid 1718
+    openstack esi offer create --resource-type dummy_node --resource-uuid 1718
 
 will make a POST request to ESI-Leap to create the offer with the given credentials. Prints to the screen the newly created offer with resource type 'dummy_node' and resource uuid '1718'.
 
-    openstack lease offer delete <uuid>
+    openstack esi offer delete <uuid>
     
 will make a DELETE request to ESI-Leap to delete the request with the given uuid. Prints to the screen whether the command was a success or not.
     

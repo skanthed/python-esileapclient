@@ -16,29 +16,29 @@ import json
 from osc_lib.command import command
 from osc_lib import utils as oscutils
 
-from esileapclient.v1.contract import Contract as CONTRACT_RESOURCE
+from esileapclient.v1.lease import Lease as LEASE_RESOURCE
 
 LOG = logging.getLogger(__name__)
 
 
-class CreateLeaseContract(command.ShowOne):
-    """Create a new lease contract."""
+class CreateLease(command.ShowOne):
+    """Create a new lease."""
 
-    log = logging.getLogger(__name__ + ".CreateLeaseContract")
+    log = logging.getLogger(__name__ + ".CreateLease")
 
     def get_parser(self, prog_name):
-        parser = super(CreateLeaseContract, self).get_parser(prog_name)
+        parser = super(CreateLease, self).get_parser(prog_name)
 
         parser.add_argument(
             '--end-time',
             dest='end_time',
             required=False,
-            help="Time when the contract will expire.")
+            help="Time when the lease will expire.")
         parser.add_argument(
             '--name',
             dest='name',
             required=False,
-            help="Name of the contract being created. ")
+            help="Name of the lease being created. ")
         parser.add_argument(
             '--offer',
             dest='offer_uuid_or_name',
@@ -58,7 +58,7 @@ class CreateLeaseContract(command.ShowOne):
             '--project-id',
             dest='project_id',
             required=False,
-            help="Project ID to assign ownership of the contract to."
+            help="Project ID to assign ownership of the lease to."
                  "If this attribute is not set, ESI-Leap will set the "
                  "project_id to the id of the user which invoked the "
                  "command.")
@@ -73,9 +73,9 @@ class CreateLeaseContract(command.ShowOne):
 
     def take_action(self, parsed_args):
 
-        lease_client = self.app.client_manager.lease
+        client = self.app.client_manager.lease
 
-        field_list = CONTRACT_RESOURCE._creation_attributes
+        field_list = LEASE_RESOURCE._creation_attributes
 
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
@@ -83,48 +83,48 @@ class CreateLeaseContract(command.ShowOne):
         if 'properties' in fields:
             fields['properties'] = json.loads(fields['properties'])
 
-        contract = lease_client.contract.create(**fields)
+        lease = client.lease.create(**fields)
 
-        data = dict([(f, getattr(contract, f, '')) for f in
-                    CONTRACT_RESOURCE.fields])
+        data = dict([(f, getattr(lease, f, '')) for f in
+                    LEASE_RESOURCE.fields])
 
         return self.dict2columns(data)
 
 
-class ListLeaseContract(command.Lister):
-    """List lease contracts."""
+class ListLease(command.Lister):
+    """List leases."""
 
-    log = logging.getLogger(__name__ + ".ListLeaseContract")
+    log = logging.getLogger(__name__ + ".ListLease")
 
     def get_parser(self, prog_name):
-        parser = super(ListLeaseContract, self).get_parser(prog_name)
+        parser = super(ListLease, self).get_parser(prog_name)
 
         parser.add_argument(
             '--long',
             default=False,
-            help="Show detailed information about the contracts.",
+            help="Show detailed information about the leases.",
             action='store_true')
         parser.add_argument(
             '--all',
             default=False,
-            help="Show all contracts in the database. For admin use only.",
+            help="Show all leases in the database. For admin use only.",
             action='store_true')
         parser.add_argument(
             '--status',
             dest='status',
             required=False,
-            help="Show all contracts with given status.")
+            help="Show all leases with given status.")
         parser.add_argument(
             '--offer-uuid',
             dest='offer_uuid',
             required=False,
-            help="Show all contracts with given offer_uuid.")
+            help="Show all leases with given offer_uuid.")
         parser.add_argument(
             '--time-range',
             dest='time_range',
             nargs=2,
             required=False,
-            help="Show all contracts with start and end times "
+            help="Show all leases with start and end times "
                  "which begin and end in the given range."
                  "Must pass in two valid datetime strings."
                  "Example: --time-range 2020-06-30T00:00:00"
@@ -133,19 +133,19 @@ class ListLeaseContract(command.Lister):
             '--project-id',
             dest='project_id',
             required=False,
-            help="Show all contracts owned by given project id.")
+            help="Show all leases owned by given project id.")
         parser.add_argument(
             '--owner',
             dest='owner',
             required=False,
-            help="Show all contracts relevant to an offer owner "
+            help="Show all leases relevant to an offer owner "
                  "by the owner's project_id.")
 
         return parser
 
     def take_action(self, parsed_args):
 
-        lease_client = self.app.client_manager.lease
+        client = self.app.client_manager.lease
 
         filters = {
             'status': parsed_args.status,
@@ -159,58 +159,58 @@ class ListLeaseContract(command.Lister):
             'view': 'all' if parsed_args.all else None
         }
 
-        data = lease_client.contract.list(filters)
+        data = client.lease.list(filters)
 
         if parsed_args.long:
-            columns = CONTRACT_RESOURCE.detailed_fields.keys()
-            labels = CONTRACT_RESOURCE.detailed_fields.values()
+            columns = LEASE_RESOURCE.detailed_fields.keys()
+            labels = LEASE_RESOURCE.detailed_fields.values()
         else:
-            columns = CONTRACT_RESOURCE.fields.keys()
-            labels = CONTRACT_RESOURCE.fields.values()
+            columns = LEASE_RESOURCE.fields.keys()
+            labels = LEASE_RESOURCE.fields.values()
 
         return (labels,
                 (oscutils.get_item_properties(s, columns) for s in data))
 
 
-class ShowLeaseContract(command.ShowOne):
-    """Show lease contract details."""
+class ShowLease(command.ShowOne):
+    """Show lease details."""
 
-    log = logging.getLogger(__name__ + ".ShowLeaseContract")
+    log = logging.getLogger(__name__ + ".ShowLease")
 
     def get_parser(self, prog_name):
-        parser = super(ShowLeaseContract, self).get_parser(prog_name)
+        parser = super(ShowLease, self).get_parser(prog_name)
         parser.add_argument(
             "uuid",
             metavar="<uuid>",
-            help="UUID of the contract")
+            help="UUID of the lease")
 
         return parser
 
     def take_action(self, parsed_args):
 
-        lease_client = self.app.client_manager.lease
+        client = self.app.client_manager.lease
 
-        contract = lease_client.contract.get(parsed_args.uuid)._info
+        lease = client.lease.get(parsed_args.uuid)._info
 
-        return zip(*sorted(contract.items()))
+        return zip(*sorted(lease.items()))
 
 
-class DeleteLeaseContract(command.Command):
-    """Unregister lease contract"""
+class DeleteLease(command.Command):
+    """Unregister lease"""
 
-    log = logging.getLogger(__name__ + ".DeleteLeaseContract")
+    log = logging.getLogger(__name__ + ".DeleteLease")
 
     def get_parser(self, prog_name):
-        parser = super(DeleteLeaseContract, self).get_parser(prog_name)
+        parser = super(DeleteLease, self).get_parser(prog_name)
         parser.add_argument(
             "uuid",
             metavar="<uuid>",
-            help="Contract to delete (UUID)")
+            help="Lease to delete (UUID)")
 
         return parser
 
     def take_action(self, parsed_args):
 
-        lease_client = self.app.client_manager.lease
-        lease_client.contract.delete(parsed_args.uuid)
-        print('Deleted contract %s' % parsed_args.uuid)
+        client = self.app.client_manager.lease
+        client.lease.delete(parsed_args.uuid)
+        print('Deleted lease %s' % parsed_args.uuid)

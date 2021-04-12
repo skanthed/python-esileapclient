@@ -18,7 +18,7 @@ from esileapclient.common import base
 LOG = logging.getLogger(__name__)
 
 
-class Contract(base.Resource):
+class Lease(base.Resource):
 
     detailed_fields = {
         'end_time': "End Time",
@@ -46,53 +46,53 @@ class Contract(base.Resource):
                             'offer_uuid_or_name', 'properties', 'project_id']
 
     def __repr__(self):
-        return "<Contract %s>" % self._info
+        return "<Lease %s>" % self._info
 
 
-class ContractManager(base.Manager):
-    resource_class = Contract
-    _resource_name = 'contracts'
+class LeaseManager(base.Manager):
+    resource_class = Lease
+    _resource_name = 'leases'
 
     def create(self, os_esileap_api_version=None, **kwargs):
-        """Create a contract based on a kwargs dictionary of attributes.
-        :returns: a :class: `Contract` object
+        """Create a lease based on a kwargs dictionary of attributes.
+        :returns: a :class: `Lease` object
         """
 
-        contract = self._create(os_esileap_api_version=os_esileap_api_version,
-                                **kwargs)
+        lease = self._create(os_esileap_api_version=os_esileap_api_version,
+                             **kwargs)
 
-        return contract
+        return lease
 
     def list(self, filters, os_esileap_api_version=None):
-        """Retrieve a list of contracts.
-        :returns: A list of contracts.
+        """Retrieve a list of leases.
+        :returns: A list of leases.
         """
 
         resource_id = ""
 
-        url_variables = ContractManager._url_variables(filters)
+        url_variables = LeaseManager._url_variables(filters)
         url = self._path(resource_id) + url_variables
 
-        contracts = self._list(url,
-                               os_esileap_api_version=os_esileap_api_version)
+        leases = self._list(url,
+                            os_esileap_api_version=os_esileap_api_version)
 
-        if type(contracts) is list:
-            return contracts
+        if type(leases) is list:
+            return leases
 
-    def get(self, contract_uuid):
-        """Get a contract with the specified identifier.
-        :param contract_uuid: The uuid of a contract.
-        :returns: a :class:`Contract` object.
+    def get(self, lease_uuid):
+        """Get a lease with the specified identifier.
+        :param lease_uuid: The uuid of a lease.
+        :returns: a :class:`Lease` object.
         """
 
-        contract = self._get(contract_uuid)
+        lease = self._get(lease_uuid)
 
-        return contract
+        return lease
 
-    def delete(self, contract_uuid):
-        """Delete a contract with the specified identifier.
-        :param contract_uuid: The uuid of a contract.
-        :returns: a :class:`Contract` object.
+    def delete(self, lease_uuid):
+        """Delete a lease with the specified identifier.
+        :param lease_uuid: The uuid of a lease.
+        :returns: a :class:`Lease` object.
         """
 
-        self._delete(resource_id=contract_uuid)
+        self._delete(resource_id=lease_uuid)

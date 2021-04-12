@@ -17,7 +17,7 @@ import logging
 from esileapclient.common import http
 from esileapclient.common.http import DEFAULT_VER
 from esileapclient.v1 import offer
-from esileapclient.v1 import contract
+from esileapclient.v1 import lease
 
 LOG = logging.getLogger(__name__)
 
@@ -41,4 +41,4 @@ class Client(object):
 
         self.http_client = http._construct_http_client(*args, **kwargs)
         self.offer = offer.OfferManager(self.http_client)
-        self.contract = contract.ContractManager(self.http_client)
+        self.lease = lease.LeaseManager(self.http_client)
