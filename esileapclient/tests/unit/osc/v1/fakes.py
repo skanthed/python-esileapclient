@@ -18,6 +18,7 @@ from osc_lib.tests import utils
 lease_availabilities = "[]"
 lease_end_time = "3000-00-00T13"
 lease_expire_time = "3000-00-00T13"
+lease_owner_id = "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy"
 lease_project_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 lease_properties = "{}"
 lease_resource_type = "dummy_node"
@@ -50,6 +51,7 @@ LEASE = {
     'name': lease_name,
     'offer_uuid': offer_uuid,
     'project_id': lease_project_id,
+    'owner_id': lease_owner_id,
     'properties': json.loads(lease_properties),
     'start_time': lease_start_time,
     'status': lease_status,

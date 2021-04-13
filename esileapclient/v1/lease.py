@@ -26,6 +26,7 @@ class Lease(base.Resource):
         'fulfill_time': "Fulfill Time",
         'name': "Name",
         'offer_uuid': "Offer UUID",
+        'owner_id': "Owner ID",
         'project_id': "Project ID",
         'properties': "Properties",
         'start_time': "Start Time",
