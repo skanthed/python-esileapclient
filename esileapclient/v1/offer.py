@@ -10,8 +10,10 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-
+import json
 import logging
+
+from osc_lib import exceptions
 
 from esileapclient.common import base
 
@@ -99,3 +101,17 @@ class OfferManager(base.Manager):
         """
 
         self._delete(resource_id=offer_uuid)
+
+    def claim(self, offer_uuid, **kwargs):
+        """Claim an offer with the specified identifier.
+        :param offer_uuid: The uuid of an offer.
+        :returns: a :class:`Offer` object.
+        """
+        url = self._path(offer_uuid) + "/claim"
+
+        resp, body = self.api.json_request('POST', url, body=kwargs)
+
+        if resp.status_code == 201:
+            return self.resource_class(self, body)
+        else:
+            raise exceptions.CommandError(json.loads(resp.text)['faultstring'])

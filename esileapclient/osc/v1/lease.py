@@ -30,6 +30,18 @@ class CreateLease(command.ShowOne):
         parser = super(CreateLease, self).get_parser(prog_name)
 
         parser.add_argument(
+            "resource_type",
+            metavar="<resource_type>",
+            help="Resource type")
+        parser.add_argument(
+            "resource_uuid",
+            metavar="<resource_uuid>",
+            help="Resource UUID")
+        parser.add_argument(
+            'project_id',
+            metavar="<project_id>",
+            help="Project leasing the resource.")
+        parser.add_argument(
             '--end-time',
             dest='end_time',
             required=False,
@@ -40,28 +52,15 @@ class CreateLease(command.ShowOne):
             required=False,
             help="Name of the lease being created. ")
         parser.add_argument(
-            '--offer',
-            dest='offer_uuid_or_name',
-            required=True,
-            help="Name or UUID of the offer")
-        parser.add_argument(
             '--status',
             dest='status',
             required=False,
-            help='State which the offer should be created in.')
+            help='State which the lease should be created in.')
         parser.add_argument(
             '--start-time',
             dest='start_time',
             required=False,
             help="Time when the resource will become usable.")
-        parser.add_argument(
-            '--project-id',
-            dest='project_id',
-            required=False,
-            help="Project ID to assign ownership of the lease to."
-                 "If this attribute is not set, ESI-Leap will set the "
-                 "project_id to the id of the user which invoked the "
-                 "command.")
         parser.add_argument(
             '--properties',
             dest='properties',
@@ -72,11 +71,9 @@ class CreateLease(command.ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-
         client = self.app.client_manager.lease
 
         field_list = LEASE_RESOURCE._creation_attributes
-
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
 

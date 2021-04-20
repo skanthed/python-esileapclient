@@ -53,6 +53,8 @@ LEASE = {
     'project_id': lease_project_id,
     'owner_id': lease_owner_id,
     'properties': json.loads(lease_properties),
+    'resource_type': lease_resource_type,
+    'resource_uuid': lease_resource_uuid,
     'start_time': lease_start_time,
     'status': lease_status,
     'uuid': lease_uuid

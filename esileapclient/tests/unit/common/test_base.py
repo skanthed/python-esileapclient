@@ -53,6 +53,7 @@ class FakeResponse(object):
         self.request.headers = request_headers
 
 
+VALID_CREATE_RESPONSE = FakeResponse(status=201)
 VALID_RESPONSE = FakeResponse(status=200)
 
 
@@ -90,7 +91,7 @@ class ManagerTestCase(testtools.TestCase):
         with mock.patch.object(manager, 'api') as mock_api:
 
             mock_api.json_request.return_value = (
-                VALID_RESPONSE,
+                VALID_CREATE_RESPONSE,
                 TESTABLE_RESOURCE)
 
             resource = manager._create(**CREATE_TESTABLE_RESOURCE)
@@ -108,7 +109,7 @@ class ManagerTestCase(testtools.TestCase):
         with mock.patch.object(manager, 'api') as mock_api:
 
             mock_api.json_request.return_value = (
-                VALID_RESPONSE,
+                VALID_CREATE_RESPONSE,
                 TESTABLE_RESOURCE)
 
             resource = manager._create(os_esileap_api_version='1.10',

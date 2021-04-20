@@ -16,6 +16,7 @@ import json
 from osc_lib.command import command
 from osc_lib import utils as oscutils
 
+from esileapclient.v1.lease import Lease as LEASE_RESOURCE
 from esileapclient.v1.offer import Offer as OFFER_RESOURCE
 
 LOG = logging.getLogger(__name__)
@@ -231,3 +232,55 @@ class DeleteOffer(command.Command):
         client = self.app.client_manager.lease
         client.offer.delete(parsed_args.uuid)
         print('Deleted offer %s' % parsed_args.uuid)
+
+
+class ClaimOffer(command.ShowOne):
+    """Claim an offer."""
+
+    log = logging.getLogger(__name__ + ".ClaimOffer")
+
+    def get_parser(self, prog_name):
+        parser = super(ClaimOffer, self).get_parser(prog_name)
+
+        parser.add_argument(
+            "offer_uuid",
+            metavar="<offer_uuid>",
+            help="Resource type")
+        parser.add_argument(
+            '--end-time',
+            dest='end_time',
+            required=False,
+            help="Time when the offer will expire and no longer be "
+                 "'available'.")
+        parser.add_argument(
+            '--start-time',
+            dest='start_time',
+            required=False,
+            help="Time when the offer will be made 'available'.")
+        parser.add_argument(
+            '--properties',
+            dest='properties',
+            required=False,
+            help="Record arbitrary key/value resource property "
+                 "information. Pass in as a json object.")
+
+        return parser
+
+    def take_action(self, parsed_args):
+
+        client = self.app.client_manager.lease
+
+        field_list = LEASE_RESOURCE._creation_attributes
+
+        fields = dict((k, v) for (k, v) in vars(parsed_args).items()
+                      if k in field_list and v is not None)
+
+        if 'properties' in fields:
+            fields['properties'] = json.loads(fields['properties'])
+
+        lease = client.offer.claim(parsed_args.offer_uuid, **fields)
+
+        data = dict([(f, getattr(lease, f, '')) for f in
+                    LEASE_RESOURCE.fields])
+
+        return self.dict2columns(data)
