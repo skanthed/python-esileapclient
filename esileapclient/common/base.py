@@ -91,8 +91,7 @@ class Manager(object):
         url = self._path()
         resp, body = self.api.json_request('POST', url, body=new, **headers)
 
-        if resp.status_code == 200:
-
+        if resp.status_code == 201:
             return self.resource_class(self, body)
         else:
             raise exceptions.CommandError(json.loads(resp.text)['faultstring'])

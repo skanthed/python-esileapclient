@@ -270,3 +270,43 @@ class TestOfferDelete(TestOffer):
         self.assertRaises(osctestutils.ParserException,
                           self.check_parser,
                           self.cmd, arglist, verifylist)
+
+
+class TestOfferClaim(TestOffer):
+    def setUp(self):
+        super(TestOfferClaim, self).setUp()
+
+        self.cmd = offer.ClaimOffer(self.app, None)
+
+    def test_offer_claim(self):
+        arglist = [
+            fakes.offer_uuid,
+            '--end-time', fakes.lease_end_time,
+            '--properties', fakes.lease_properties,
+            '--start-time', fakes.lease_start_time,
+        ]
+        verifylist = [
+            ('offer_uuid', fakes.offer_uuid),
+            ('end_time', fakes.lease_end_time),
+            ('properties', fakes.lease_properties),
+            ('start_time', fakes.lease_start_time),
+        ]
+
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        self.cmd.take_action(parsed_args)
+
+        lease_args = {
+            'end_time': fakes.lease_end_time,
+            'properties': json.loads(fakes.lease_properties),
+            'start_time': fakes.lease_start_time,
+        }
+
+        self.lease_mock.offer.claim.assert_called_once_with(
+            fakes.offer_uuid, **lease_args)
+
+    def test_offer_claim_no_id(self):
+        arglist = []
+        verifylist = []
+        self.assertRaises(osctestutils.ParserException,
+                          self.check_parser,
+                          self.cmd, arglist, verifylist)

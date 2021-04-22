@@ -41,12 +41,14 @@ class TestCreateLease(TestLease):
         # Get the command object to test
         self.cmd = lease.CreateLease(self.app, None)
 
-    def test_market_lease_create(self):
+    def test_lease_create(self):
 
         arglist = [
+            fakes.lease_resource_type,
+            fakes.lease_resource_uuid,
+            fakes.lease_project_id,
             '--end-time', fakes.lease_end_time,
             '--name', fakes.lease_name,
-            '--offer', fakes.offer_uuid,
             '--properties', fakes.lease_properties,
             '--start-time', fakes.lease_start_time,
             '--status', fakes.lease_status,
@@ -55,8 +57,10 @@ class TestCreateLease(TestLease):
         verifylist = [
             ('end_time', fakes.lease_end_time),
             ('name', fakes.lease_name),
-            ('offer_uuid_or_name', fakes.offer_uuid),
+            ('project_id', fakes.lease_project_id),
             ('properties', fakes.lease_properties),
+            ('resource_type', fakes.lease_resource_type),
+            ('resource_uuid', fakes.lease_resource_uuid),
             ('start_time', fakes.lease_start_time),
             ('status', fakes.lease_status),
         ]
@@ -66,9 +70,11 @@ class TestCreateLease(TestLease):
         self.cmd.take_action(parsed_args)
 
         args = {
+            'resource_type': fakes.lease_resource_type,
+            'resource_uuid': fakes.lease_resource_uuid,
+            'project_id': fakes.lease_project_id,
             'end_time': fakes.lease_end_time,
             'name': fakes.lease_name,
-            'offer_uuid_or_name': fakes.offer_uuid,
             'properties': json.loads(fakes.lease_properties),
             'start_time': fakes.lease_start_time,
             'status': fakes.lease_status,
@@ -78,6 +84,7 @@ class TestCreateLease(TestLease):
 
 
 class TestLeaseList(TestLease):
+
     def setUp(self):
         super(TestLeaseList, self).setUp()
 
@@ -112,6 +119,8 @@ class TestLeaseList(TestLease):
         collist = [
             "UUID",
             "Name",
+            "Resource Type",
+            "Resource UUID",
             "Start Time",
             "End Time",
             "Offer UUID",
@@ -122,6 +131,8 @@ class TestLeaseList(TestLease):
 
         datalist = ((fakes.lease_uuid,
                      fakes.lease_name,
+                     fakes.lease_resource_type,
+                     fakes.lease_resource_uuid,
                      fakes.lease_start_time,
                      fakes.lease_end_time,
                      fakes.offer_uuid,
@@ -159,6 +170,8 @@ class TestLeaseList(TestLease):
             "Owner ID",
             "Project ID",
             "Properties",
+            "Resource Type",
+            "Resource UUID",
             "Start Time",
             "Status",
             "UUID",
@@ -174,6 +187,8 @@ class TestLeaseList(TestLease):
                      fakes.lease_owner_id,
                      fakes.lease_project_id,
                      json.loads(fakes.lease_properties),
+                     fakes.lease_resource_type,
+                     fakes.lease_resource_uuid,
                      fakes.lease_start_time,
                      fakes.lease_status,
                      fakes.lease_uuid
@@ -191,7 +206,7 @@ class TestLeaseShow(TestLease):
 
         self.cmd = lease.ShowLease(self.app, None)
 
-    def test_market_lease_show(self):
+    def test_lease_show(self):
         arglist = [fakes.lease_uuid]
         verifylist = [('uuid', fakes.lease_uuid)]
 
@@ -210,6 +225,8 @@ class TestLeaseShow(TestLease):
             "owner_id",
             "project_id",
             "properties",
+            "resource_type",
+            "resource_uuid",
             "start_time",
             "status",
             "uuid",
@@ -225,6 +242,8 @@ class TestLeaseShow(TestLease):
                     fakes.lease_owner_id,
                     fakes.lease_project_id,
                     json.loads(fakes.lease_properties),
+                    fakes.lease_resource_type,
+                    fakes.lease_resource_uuid,
                     fakes.lease_start_time,
                     fakes.lease_status,
                     fakes.lease_uuid
