@@ -30,10 +30,6 @@ class CreateLease(command.ShowOne):
         parser = super(CreateLease, self).get_parser(prog_name)
 
         parser.add_argument(
-            "resource_type",
-            metavar="<resource_type>",
-            help="Resource type")
-        parser.add_argument(
             "resource_uuid",
             metavar="<resource_uuid>",
             help="Resource UUID")
@@ -52,21 +48,21 @@ class CreateLease(command.ShowOne):
             required=False,
             help="Name of the lease being created. ")
         parser.add_argument(
-            '--status',
-            dest='status',
-            required=False,
-            help='State which the lease should be created in.')
-        parser.add_argument(
-            '--start-time',
-            dest='start_time',
-            required=False,
-            help="Time when the resource will become usable.")
-        parser.add_argument(
             '--properties',
             dest='properties',
             required=False,
             help="Record arbitrary key/value resource property "
                  "information. Pass in as a json object.")
+        parser.add_argument(
+            '--resource-type',
+            dest='resource_type',
+            required=False,
+            help="Use this resource type instead of the default.")
+        parser.add_argument(
+            '--start-time',
+            dest='start_time',
+            required=False,
+            help="Time when the resource will become usable.")
 
         return parser
 

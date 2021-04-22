@@ -31,6 +31,10 @@ class CreateOffer(command.ShowOne):
         parser = super(CreateOffer, self).get_parser(prog_name)
 
         parser.add_argument(
+            "resource_uuid",
+            metavar="<resource_uuid>",
+            help="Resource UUID")
+        parser.add_argument(
             '--end-time',
             dest='end_time',
             required=False,
@@ -42,39 +46,21 @@ class CreateOffer(command.ShowOne):
             required=False,
             help="Name of the offer being created. ")
         parser.add_argument(
-            '--resource-type',
-            dest='resource_type',
-            required=True,
-            help='Type of the resource to be offered.')
-        parser.add_argument(
-            '--resource-uuid',
-            dest='resource_uuid',
-            required=True,
-            help="UUID of the resource")
-        parser.add_argument(
-            '--status',
-            dest='status',
-            required=False,
-            help='State which the offer should be created in.')
-        parser.add_argument(
-            '--start-time',
-            dest='start_time',
-            required=False,
-            help="Time when the offer will be made 'available'.")
-        parser.add_argument(
-            '--project-id',
-            dest='project_id',
-            required=False,
-            help="Project ID to assign ownership of the offer to."
-                 "If this attribute is not set, ESI-Leap will set the "
-                 "project_id to the id of the user which invoked the "
-                 "command.")
-        parser.add_argument(
             '--properties',
             dest='properties',
             required=False,
             help="Record arbitrary key/value resource property "
                  "information. Pass in as a json object.")
+        parser.add_argument(
+            '--resource-type',
+            dest='resource_type',
+            required=False,
+            help="Use this resource type instead of the default.")
+        parser.add_argument(
+            '--start-time',
+            dest='start_time',
+            required=False,
+            help="Time when the offer will be made 'available'.")
 
         return parser
 

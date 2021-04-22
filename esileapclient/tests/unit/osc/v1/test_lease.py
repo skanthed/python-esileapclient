@@ -44,14 +44,13 @@ class TestCreateLease(TestLease):
     def test_lease_create(self):
 
         arglist = [
-            fakes.lease_resource_type,
             fakes.lease_resource_uuid,
             fakes.lease_project_id,
             '--end-time', fakes.lease_end_time,
             '--name', fakes.lease_name,
             '--properties', fakes.lease_properties,
+            '--resource-type', fakes.lease_resource_type,
             '--start-time', fakes.lease_start_time,
-            '--status', fakes.lease_status,
         ]
 
         verifylist = [
@@ -62,7 +61,6 @@ class TestCreateLease(TestLease):
             ('resource_type', fakes.lease_resource_type),
             ('resource_uuid', fakes.lease_resource_uuid),
             ('start_time', fakes.lease_start_time),
-            ('status', fakes.lease_status),
         ]
 
         parsed_args = self.check_parser(self.cmd, arglist, verifylist)
@@ -77,7 +75,6 @@ class TestCreateLease(TestLease):
             'name': fakes.lease_name,
             'properties': json.loads(fakes.lease_properties),
             'start_time': fakes.lease_start_time,
-            'status': fakes.lease_status,
         }
 
         self.lease_mock.lease.create.assert_called_once_with(**args)
