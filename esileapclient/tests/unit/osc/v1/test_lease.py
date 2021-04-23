@@ -107,7 +107,7 @@ class TestLeaseList(TestLease):
             'end_time': str(parsed_args.time_range[1]) if
             parsed_args.time_range else None,
             'project_id': parsed_args.project_id,
-            'owner': parsed_args.owner,
+            'owner_id': parsed_args.owner_id,
             'view': 'all' if parsed_args.all else None
         }
 
@@ -152,7 +152,7 @@ class TestLeaseList(TestLease):
             'end_time': str(parsed_args.time_range[1]) if
             parsed_args.time_range else None,
             'project_id': parsed_args.project_id,
-            'owner': parsed_args.owner,
+            'owner_id': parsed_args.owner_id,
             'view': 'all' if parsed_args.all else None
         }
 

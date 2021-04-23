@@ -128,8 +128,8 @@ class ListLease(command.Lister):
             required=False,
             help="Show all leases owned by given project id.")
         parser.add_argument(
-            '--owner',
-            dest='owner',
+            '--owner-id',
+            dest='owner_id',
             required=False,
             help="Show all leases relevant to an offer owner "
                  "by the owner's project_id.")
@@ -148,7 +148,7 @@ class ListLease(command.Lister):
             'end_time': str(parsed_args.time_range[1]) if
             parsed_args.time_range else None,
             'project_id': parsed_args.project_id,
-            'owner': parsed_args.owner,
+            'owner_id': parsed_args.owner_id,
             'view': 'all' if parsed_args.all else None
         }
 
