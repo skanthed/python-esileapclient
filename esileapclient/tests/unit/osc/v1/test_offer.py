@@ -41,16 +41,15 @@ class TestOfferCreate(TestOffer):
         # Get the command object to test
         self.cmd = offer.CreateOffer(self.app, None)
 
-    def test_market_offer_create(self):
+    def test_offer_create(self):
 
         arglist = [
+            fakes.lease_resource_uuid,
             '--end-time', fakes.lease_end_time,
             '--name', fakes.offer_name,
             '--properties', fakes.lease_properties,
             '--resource-type', fakes.lease_resource_type,
-            '--resource-uuid', fakes.lease_resource_uuid,
             '--start-time', fakes.lease_start_time,
-            '--status', fakes.lease_status,
         ]
 
         verifylist = [
@@ -60,7 +59,6 @@ class TestOfferCreate(TestOffer):
             ('resource_type', fakes.lease_resource_type),
             ('resource_uuid', fakes.lease_resource_uuid),
             ('start_time', fakes.lease_start_time),
-            ('status', fakes.lease_status),
         ]
 
         parsed_args = self.check_parser(self.cmd, arglist, verifylist)
@@ -74,7 +72,6 @@ class TestOfferCreate(TestOffer):
             'resource_type': fakes.lease_resource_type,
             'resource_uuid': fakes.lease_resource_uuid,
             'start_time': fakes.lease_start_time,
-            'status': fakes.lease_status,
         }
 
         self.lease_mock.offer.create.assert_called_once_with(**args)
@@ -202,7 +199,7 @@ class TestOfferShow(TestOffer):
 
         self.cmd = offer.ShowOffer(self.app, None)
 
-    def test_market_offer_show(self):
+    def test_offer_show(self):
         arglist = [fakes.offer_uuid]
         verifylist = [('uuid', fakes.offer_uuid)]
 
