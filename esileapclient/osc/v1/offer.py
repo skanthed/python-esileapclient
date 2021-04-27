@@ -41,6 +41,11 @@ class CreateOffer(command.ShowOne):
             help="Time when the offer will expire and no longer be "
                  "'available'.")
         parser.add_argument(
+            '--lessee-id',
+            dest='lessee_id',
+            required=False,
+            help="Project subtree to which this offer will be limited.")
+        parser.add_argument(
             '--name',
             dest='name',
             required=False,
