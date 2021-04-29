@@ -28,12 +28,14 @@ lease_fulfill_time = "2010"
 lease_status = "fake_status"
 lease_uuid = "9999999"
 offer_uuid = "111111111"
+offer_lessee_id = "zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzzzzzz"
 offer_name = "o1"
 lease_name = "c1"
 
 OFFER = {
     'availabilities': json.loads(lease_availabilities),
     'end_time': lease_end_time,
+    'lessee_id': offer_lessee_id,
     'name': offer_name,
     'project_id': lease_project_id,
     'properties': json.loads(lease_properties),

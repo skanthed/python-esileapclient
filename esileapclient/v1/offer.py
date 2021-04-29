@@ -25,6 +25,7 @@ class Offer(base.Resource):
     detailed_fields = {
         'availabilities': "Availabilities",
         'end_time': "End Time",
+        'lessee_id': "Lessee ID",
         'name': "Name",
         'project_id': "Project ID",
         'properties': "Properties",
@@ -38,6 +39,7 @@ class Offer(base.Resource):
     fields = {
         'uuid': "UUID",
         'name': "Name",
+        'lessee_id': "Lessee ID",
         'start_time': "Start Time",
         'end_time': "End Time",
         'resource_type': "Resource Type",
@@ -48,7 +50,8 @@ class Offer(base.Resource):
 
     _creation_attributes = ['resource_type', 'resource_uuid',
                             'start_time', 'end_time', 'status',
-                            'project_id', 'properties', 'name']
+                            'project_id', 'properties', 'name',
+                            'lessee_id']
 
     def __repr__(self):
         return "<Offer %s>" % self._info

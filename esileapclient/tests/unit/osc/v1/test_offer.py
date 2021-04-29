@@ -46,6 +46,7 @@ class TestOfferCreate(TestOffer):
         arglist = [
             fakes.lease_resource_uuid,
             '--end-time', fakes.lease_end_time,
+            '--lessee-id', fakes.offer_lessee_id,
             '--name', fakes.offer_name,
             '--properties', fakes.lease_properties,
             '--resource-type', fakes.lease_resource_type,
@@ -54,6 +55,7 @@ class TestOfferCreate(TestOffer):
 
         verifylist = [
             ('end_time', fakes.lease_end_time),
+            ('lessee_id', fakes.offer_lessee_id),
             ('name', fakes.offer_name),
             ('properties', fakes.lease_properties),
             ('resource_type', fakes.lease_resource_type),
@@ -67,6 +69,7 @@ class TestOfferCreate(TestOffer):
 
         args = {
             'end_time': fakes.lease_end_time,
+            'lessee_id': fakes.offer_lessee_id,
             'name': fakes.offer_name,
             'properties': json.loads(fakes.lease_properties),
             'resource_type': fakes.lease_resource_type,
@@ -115,6 +118,7 @@ class TestOfferList(TestOffer):
         collist = [
             "UUID",
             "Name",
+            "Lessee ID",
             "Start Time",
             "End Time",
             "Resource Type",
@@ -127,6 +131,7 @@ class TestOfferList(TestOffer):
 
         datalist = ((fakes.offer_uuid,
                      fakes.offer_name,
+                     fakes.offer_lessee_id,
                      fakes.lease_start_time,
                      fakes.lease_end_time,
                      fakes.lease_resource_type,
@@ -163,6 +168,7 @@ class TestOfferList(TestOffer):
         long_collist = [
             "Availabilities",
             "End Time",
+            "Lessee ID",
             "Name",
             "Project ID",
             "Properties",
@@ -177,6 +183,7 @@ class TestOfferList(TestOffer):
 
         datalist = ((json.loads(fakes.lease_availabilities),
                      fakes.lease_end_time,
+                     fakes.offer_lessee_id,
                      fakes.offer_name,
                      fakes.lease_project_id,
                      json.loads(fakes.lease_properties),
@@ -212,6 +219,7 @@ class TestOfferShow(TestOffer):
         collist = (
             "availabilities",
             "end_time",
+            "lessee_id",
             "name",
             "project_id",
             "properties",
@@ -226,6 +234,7 @@ class TestOfferShow(TestOffer):
 
         datalist = (json.loads(fakes.lease_availabilities),
                     fakes.lease_end_time,
+                    fakes.offer_lessee_id,
                     fakes.offer_name,
                     fakes.lease_project_id,
                     json.loads(fakes.lease_properties),
