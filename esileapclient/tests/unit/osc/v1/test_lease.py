@@ -15,16 +15,17 @@ import json
 from osc_lib.tests import utils as osctestutils
 
 from esileapclient.osc.v1 import lease
+from esileapclient.tests.unit.osc.v1 import base
 from esileapclient.tests.unit.osc.v1 import fakes
 
 
-class TestLease(fakes.TestLease):
+class TestLease(base.TestESILeapCommand):
 
     def setUp(self):
         super(TestLease, self).setUp()
 
-        self.lease_mock = self.app.client_manager.lease
-        self.lease_mock.reset_mock()
+        self.client_mock = self.app.client_manager.lease
+        self.client_mock.reset_mock()
 
 
 class TestCreateLease(TestLease):
@@ -32,11 +33,9 @@ class TestCreateLease(TestLease):
     def setUp(self):
         super(TestCreateLease, self).setUp()
 
-        self.lease_mock.lease.create.return_value = (
-            fakes.FakeLeaseResource(
-                None,
-                copy.deepcopy(fakes.LEASE)
-            ))
+        self.client_mock.lease.create.return_value = (
+            base.FakeResource(copy.deepcopy(fakes.LEASE))
+        )
 
         # Get the command object to test
         self.cmd = lease.CreateLease(self.app, None)
@@ -77,7 +76,7 @@ class TestCreateLease(TestLease):
             'start_time': fakes.lease_start_time,
         }
 
-        self.lease_mock.lease.create.assert_called_once_with(**args)
+        self.client_mock.lease.create.assert_called_once_with(**args)
 
 
 class TestLeaseList(TestLease):
@@ -85,10 +84,8 @@ class TestLeaseList(TestLease):
     def setUp(self):
         super(TestLeaseList, self).setUp()
 
-        self.lease_mock.lease.list.return_value = [
-            fakes.FakeLeaseResource(
-                None,
-                copy.deepcopy(fakes.LEASE))
+        self.client_mock.lease.list.return_value = [
+            base.FakeResource(copy.deepcopy(fakes.LEASE))
         ]
         self.cmd = lease.ListLease(self.app, None)
 
@@ -111,7 +108,7 @@ class TestLeaseList(TestLease):
             'view': 'all' if parsed_args.all else None
         }
 
-        self.lease_mock.lease.list.assert_called_with(filters)
+        self.client_mock.lease.list.assert_called_with(filters)
 
         collist = [
             "UUID",
@@ -156,7 +153,7 @@ class TestLeaseList(TestLease):
             'view': 'all' if parsed_args.all else None
         }
 
-        self.lease_mock.lease.list.assert_called_with(filters)
+        self.client_mock.lease.list.assert_called_with(filters)
 
         long_collist = [
             "End Time",
@@ -197,9 +194,8 @@ class TestLeaseShow(TestLease):
     def setUp(self):
         super(TestLeaseShow, self).setUp()
 
-        self.lease_mock.lease.get.return_value = \
-            fakes.FakeLeaseResource(None,
-                                    copy.deepcopy(fakes.LEASE))
+        self.client_mock.lease.get.return_value = \
+            base.FakeResource(copy.deepcopy(fakes.LEASE))
 
         self.cmd = lease.ShowLease(self.app, None)
 
@@ -210,7 +206,7 @@ class TestLeaseShow(TestLease):
         parsed_args = self.check_parser(self.cmd, arglist, verifylist)
         columns, data = self.cmd.take_action(parsed_args)
 
-        self.lease_mock.lease.get.assert_called_once_with(
+        self.client_mock.lease.get.assert_called_once_with(
             fakes.lease_uuid)
 
         collist = (
@@ -268,7 +264,7 @@ class TestLeaseDelete(TestLease):
         parsed_args = self.check_parser(self.cmd, arglist, verifylist)
         self.cmd.take_action(parsed_args)
 
-        self.lease_mock.lease.delete.assert_called_once_with(
+        self.client_mock.lease.delete.assert_called_once_with(
             fakes.lease_uuid)
 
     def test_lease_delete_no_id(self):
