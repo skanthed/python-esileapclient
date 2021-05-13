@@ -10,10 +10,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import mock
 import json
 
-from osc_lib.tests import utils
 
 lease_availabilities = "[]"
 lease_end_time = "3000-00-00T13"
@@ -61,24 +59,3 @@ LEASE = {
     'status': lease_status,
     'uuid': lease_uuid
 }
-
-
-class TestLease(utils.TestCommand):
-
-    def setUp(self):
-        super(TestLease, self).setUp()
-
-        self.app.client_manager.auth_ref = mock.Mock(auth_token="TOKEN")
-        self.app.client_manager.lease = mock.Mock()
-
-
-class FakeLeaseResource(object):
-    def __init__(self, manager, info):
-        self.__name__ = type(self).__name__
-        self.manager = manager
-        self._info = info
-        self._add_details(info)
-
-    def _add_details(self, info):
-        for (k, v) in info.items():
-            setattr(self, k, v)

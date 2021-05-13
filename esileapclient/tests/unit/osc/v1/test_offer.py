@@ -15,16 +15,17 @@ import json
 from osc_lib.tests import utils as osctestutils
 
 from esileapclient.osc.v1 import offer
+from esileapclient.tests.unit.osc.v1 import base
 from esileapclient.tests.unit.osc.v1 import fakes
 
 
-class TestOffer(fakes.TestLease):
+class TestOffer(base.TestESILeapCommand):
 
     def setUp(self):
         super(TestOffer, self).setUp()
 
-        self.lease_mock = self.app.client_manager.lease
-        self.lease_mock.reset_mock()
+        self.client_mock = self.app.client_manager.lease
+        self.client_mock.reset_mock()
 
 
 class TestOfferCreate(TestOffer):
@@ -32,11 +33,9 @@ class TestOfferCreate(TestOffer):
     def setUp(self):
         super(TestOfferCreate, self).setUp()
 
-        self.lease_mock.offer.create.return_value = (
-            fakes.FakeLeaseResource(
-                None,
-                copy.deepcopy(fakes.OFFER)
-            ))
+        self.client_mock.offer.create.return_value = (
+            base.FakeResource(copy.deepcopy(fakes.OFFER))
+        )
 
         # Get the command object to test
         self.cmd = offer.CreateOffer(self.app, None)
@@ -77,17 +76,15 @@ class TestOfferCreate(TestOffer):
             'start_time': fakes.lease_start_time,
         }
 
-        self.lease_mock.offer.create.assert_called_once_with(**args)
+        self.client_mock.offer.create.assert_called_once_with(**args)
 
 
 class TestOfferList(TestOffer):
     def setUp(self):
         super(TestOfferList, self).setUp()
 
-        self.lease_mock.offer.list.return_value = [
-            fakes.FakeLeaseResource(
-                None,
-                copy.deepcopy(fakes.OFFER))
+        self.client_mock.offer.list.return_value = [
+            base.FakeResource(copy.deepcopy(fakes.OFFER))
         ]
         self.cmd = offer.ListOffer(self.app, None)
 
@@ -113,7 +110,7 @@ class TestOfferList(TestOffer):
             'resource_uuid': parsed_args.resource_uuid
         }
 
-        self.lease_mock.offer.list.assert_called_with(filters)
+        self.client_mock.offer.list.assert_called_with(filters)
 
         collist = [
             "UUID",
@@ -163,7 +160,7 @@ class TestOfferList(TestOffer):
             'resource_uuid': parsed_args.resource_uuid
         }
 
-        self.lease_mock.offer.list.assert_called_with(filters)
+        self.client_mock.offer.list.assert_called_with(filters)
 
         long_collist = [
             "Availabilities",
@@ -200,9 +197,8 @@ class TestOfferShow(TestOffer):
     def setUp(self):
         super(TestOfferShow, self).setUp()
 
-        self.lease_mock.offer.get.return_value = \
-            fakes.FakeLeaseResource(None,
-                                    copy.deepcopy(fakes.OFFER))
+        self.client_mock.offer.get.return_value = \
+            base.FakeResource(copy.deepcopy(fakes.OFFER))
 
         self.cmd = offer.ShowOffer(self.app, None)
 
@@ -213,7 +209,7 @@ class TestOfferShow(TestOffer):
         parsed_args = self.check_parser(self.cmd, arglist, verifylist)
         columns, data = self.cmd.take_action(parsed_args)
 
-        self.lease_mock.offer.get.assert_called_once_with(
+        self.client_mock.offer.get.assert_called_once_with(
             fakes.offer_uuid)
 
         collist = (
@@ -267,7 +263,7 @@ class TestOfferDelete(TestOffer):
         parsed_args = self.check_parser(self.cmd, arglist, verifylist)
         self.cmd.take_action(parsed_args)
 
-        self.lease_mock.offer.delete.assert_called_once_with(
+        self.client_mock.offer.delete.assert_called_once_with(
             fakes.offer_uuid)
 
     def test_offer_delete_no_id(self):
@@ -307,7 +303,7 @@ class TestOfferClaim(TestOffer):
             'start_time': fakes.lease_start_time,
         }
 
-        self.lease_mock.offer.claim.assert_called_once_with(
+        self.client_mock.offer.claim.assert_called_once_with(
             fakes.offer_uuid, **lease_args)
 
     def test_offer_claim_no_id(self):
