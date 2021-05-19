@@ -133,6 +133,16 @@ class ListLease(command.Lister):
             required=False,
             help="Show all leases relevant to an offer owner "
                  "by the owner's project_id.")
+        parser.add_argument(
+            '--resource-type',
+            dest='resource_type',
+            required=False,
+            help="Show all leases with given resource-type.")
+        parser.add_argument(
+            '--resource-uuid',
+            dest='resource_uuid',
+            required=False,
+            help="Show all leases with given resource-uuid.")
 
         return parser
 
@@ -149,7 +159,9 @@ class ListLease(command.Lister):
             parsed_args.time_range else None,
             'project_id': parsed_args.project_id,
             'owner_id': parsed_args.owner_id,
-            'view': 'all' if parsed_args.all else None
+            'view': 'all' if parsed_args.all else None,
+            'resource_type': parsed_args.resource_type,
+            'resource_uuid': parsed_args.resource_uuid
         }
 
         data = client.lease.list(filters)

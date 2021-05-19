@@ -105,7 +105,9 @@ class TestLeaseList(TestLease):
             parsed_args.time_range else None,
             'project_id': parsed_args.project_id,
             'owner_id': parsed_args.owner_id,
-            'view': 'all' if parsed_args.all else None
+            'view': 'all' if parsed_args.all else None,
+            'resource_type': parsed_args.resource_type,
+            'resource_uuid': parsed_args.resource_uuid
         }
 
         self.client_mock.lease.list.assert_called_with(filters)
@@ -150,7 +152,9 @@ class TestLeaseList(TestLease):
             parsed_args.time_range else None,
             'project_id': parsed_args.project_id,
             'owner_id': parsed_args.owner_id,
-            'view': 'all' if parsed_args.all else None
+            'view': 'all' if parsed_args.all else None,
+            'resource_type': parsed_args.resource_type,
+            'resource_uuid': parsed_args.resource_uuid
         }
 
         self.client_mock.lease.list.assert_called_with(filters)
