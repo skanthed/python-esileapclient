@@ -45,7 +45,7 @@ class TestOfferCreate(TestOffer):
         arglist = [
             fakes.lease_resource_uuid,
             '--end-time', fakes.lease_end_time,
-            '--lessee-id', fakes.offer_lessee_id,
+            '--lessee', fakes.offer_lessee_id,
             '--name', fakes.offer_name,
             '--properties', fakes.lease_properties,
             '--resource-type', fakes.lease_resource_type,

@@ -41,7 +41,7 @@ class CreateOffer(command.ShowOne):
             help="Time when the offer will expire and no longer be "
                  "'available'.")
         parser.add_argument(
-            '--lessee-id',
+            '--lessee',
             dest='lessee_id',
             required=False,
             help="Project subtree to which this offer will be limited.")
@@ -129,10 +129,10 @@ class ListOffer(command.Lister):
                  "Example: --availability-range 2020-06-30T00:00:00"
                  "2021-06-30T00:00:00")
         parser.add_argument(
-            '--project-id',
+            '--project',
             dest='project_id',
             required=False,
-            help="Show all offers owned by given project id.")
+            help="Show all offers owned by given project ID or name.")
         parser.add_argument(
             '--resource-type',
             dest='resource_type',

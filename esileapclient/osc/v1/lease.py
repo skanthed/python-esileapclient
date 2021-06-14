@@ -31,12 +31,12 @@ class CreateLease(command.ShowOne):
 
         parser.add_argument(
             "resource_uuid",
-            metavar="<resource_uuid>",
-            help="Resource UUID")
+            metavar="<resource>",
+            help="Resource UUID or name")
         parser.add_argument(
             'project_id',
-            metavar="<project_id>",
-            help="Project leasing the resource.")
+            metavar="<project>",
+            help="Project ID or name leasing the resource.")
         parser.add_argument(
             '--end-time',
             dest='end_time',
@@ -123,16 +123,16 @@ class ListLease(command.Lister):
                  "Example: --time-range 2020-06-30T00:00:00"
                  "2021-06-30T00:00:00")
         parser.add_argument(
-            '--project-id',
+            '--project',
             dest='project_id',
             required=False,
-            help="Show all leases owned by given project id.")
+            help="Show all leases owned by given project ID or name.")
         parser.add_argument(
-            '--owner-id',
+            '--owner',
             dest='owner_id',
             required=False,
             help="Show all leases relevant to an offer owner "
-                 "by the owner's project_id.")
+                 "by the owner's project ID or name.")
         parser.add_argument(
             '--resource-type',
             dest='resource_type',
