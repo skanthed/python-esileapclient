@@ -28,6 +28,7 @@ lease_uuid = "9999999"
 offer_uuid = "111111111"
 offer_lessee_id = "zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzzzzzz"
 offer_name = "o1"
+parent_lease_uuid = "parent-lease-uuid"
 lease_name = "c1"
 
 OFFER = {
@@ -35,6 +36,7 @@ OFFER = {
     'end_time': lease_end_time,
     'lessee_id': offer_lessee_id,
     'name': offer_name,
+    'parent_lease_uuid': parent_lease_uuid,
     'project_id': lease_project_id,
     'properties': json.loads(lease_properties),
     'resource_type': lease_resource_type,
@@ -50,6 +52,7 @@ LEASE = {
     'fulfill_time': lease_fulfill_time,
     'name': lease_name,
     'offer_uuid': offer_uuid,
+    'parent_lease_uuid': parent_lease_uuid,
     'project_id': lease_project_id,
     'owner_id': lease_owner_id,
     'properties': json.loads(lease_properties),

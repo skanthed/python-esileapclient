@@ -27,6 +27,7 @@ class Lease(base.Resource):
         'name': "Name",
         'offer_uuid': "Offer UUID",
         'owner_id': "Owner ID",
+        'parent_lease_uuid': "Parent Lease UUID",
         'project_id': "Project ID",
         'properties': "Properties",
         'resource_type': "Resource Type",

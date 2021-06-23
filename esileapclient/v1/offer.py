@@ -27,6 +27,7 @@ class Offer(base.Resource):
         'end_time': "End Time",
         'lessee_id': "Lessee ID",
         'name': "Name",
+        'parent_lease_uuid': "Parent Lease UUID",
         'project_id': "Project ID",
         'properties': "Properties",
         'resource_type': "Resource Type",
