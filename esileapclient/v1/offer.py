@@ -25,11 +25,14 @@ class Offer(base.Resource):
     detailed_fields = {
         'availabilities': "Availabilities",
         'end_time': "End Time",
+        'lessee': "Lessee",
         'lessee_id': "Lessee ID",
         'name': "Name",
         'parent_lease_uuid': "Parent Lease UUID",
+        'project': "Project",
         'project_id': "Project ID",
         'properties': "Properties",
+        'resource': "Resource",
         'resource_type': "Resource Type",
         'resource_uuid': "Resource UUID",
         'start_time': "Start Time",
@@ -39,12 +42,10 @@ class Offer(base.Resource):
 
     fields = {
         'uuid': "UUID",
-        'name': "Name",
-        'lessee_id': "Lessee ID",
+        'resource': "Resource",
+        'lessee': "Lessee",
         'start_time': "Start Time",
         'end_time': "End Time",
-        'resource_type': "Resource Type",
-        'resource_uuid': "Resource UUID",
         'status': "Status",
         'availabilities': "Availabilities",
     }
