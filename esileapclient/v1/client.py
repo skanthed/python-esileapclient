@@ -17,6 +17,7 @@ import logging
 from esileapclient.common import http
 from esileapclient.common.http import DEFAULT_VER
 from esileapclient.v1 import lease
+from esileapclient.v1 import node
 from esileapclient.v1 import offer
 from esileapclient.v1 import owner_change
 
@@ -42,5 +43,6 @@ class Client(object):
 
         self.http_client = http._construct_http_client(*args, **kwargs)
         self.lease = lease.LeaseManager(self.http_client)
+        self.node = node.NodeManager(self.http_client)
         self.offer = offer.OfferManager(self.http_client)
         self.owner_change = owner_change.OwnerChangeManager(self.http_client)
