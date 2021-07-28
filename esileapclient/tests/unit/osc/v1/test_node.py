@@ -10,7 +10,7 @@ class TestNode(base.TestESILeapCommand):
     def setUp(self):
         super(TestNode, self).setUp()
 
-        self.client_mock = self.app.client_manager.node
+        self.client_mock = self.app.client_manager.lease
         self.client_mock.reset_mock()
 
 
@@ -34,7 +34,7 @@ class TestNodeList(TestNode):
         filters = {
         }
 
-        self.client_mock.lease.list.assert_called_with(filters)
+        self.client_mock.node.list.assert_called_with(filters)
 
         collist = [
             "Name",
@@ -42,28 +42,5 @@ class TestNodeList(TestNode):
 
         self.assertEqual(collist, list(columns))
 
-        datalist = ((fakes.node_name
-                     ),)
-        self.assertEqual(datalist, tuple(data))
-
-    def test_lease_list_long(self):
-        arglist = ['--long']
-        verifylist = [('long', True)]
-
-        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
-        columns, data = self.cmd.take_action(parsed_args)
-
-        filters = {
-        }
-
-        self.client_mock.lease.list.assert_called_with(filters)
-
-        long_collist = [
-            "Name",
-        ]
-
-        self.assertEqual(long_collist, list(columns))
-
-        datalist = ((fakes.node_name,
-                     ),)
+        datalist = ((fakes.node_name,),)
         self.assertEqual(datalist, tuple(data))
