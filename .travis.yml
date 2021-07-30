@@ -10,4 +10,4 @@ install:
 script:
   - sh -e ci/pylint_tests.sh
   - sh -e ci/pycodestyle_tests.sh
-  - tox -e py37
+  - tox -e py3
