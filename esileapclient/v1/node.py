@@ -26,7 +26,9 @@ class Node(base.Resource):
         'owner': "Owner",
         'offer_uuid': "Offer UUID",
         'lease_uuid': "Lease UUID",
-        'lessee': "Lessee"
+        'lessee': "Lessee",
+        'future_offers': "Future Offers",
+        'future_leases': "Future Leases"
     }
 
     fields = {
@@ -38,7 +40,8 @@ class Node(base.Resource):
     }
 
     _creation_attributes = ['name', 'uuid', 'owner', 'offer_uuid',
-                            'lessee', 'lease_uuid']
+                            'lessee', 'lease_uuid', 'future_offers',
+                            'future_leases']
 
     def __repr__(self):
         return "<Node %s>" % self._info

@@ -46,7 +46,6 @@ class TestNodeList(TestNode):
 
         self.assertEqual(collist, list(columns))
 
-        print(data)
         datalist = ((fakes.node_name,
                      fakes.node_owner,
                      '', '', ''
@@ -71,7 +70,9 @@ class TestNodeList(TestNode):
             "Owner",
             "Offer UUID",
             "Lease UUID",
-            "Lessee"
+            "Lessee",
+            "Future Offers",
+            "Future Leases"
         ]
 
         self.assertEqual(long_collist, list(columns))
@@ -79,6 +80,6 @@ class TestNodeList(TestNode):
         datalist = ((fakes.node_name,
                      fakes.node_uuid,
                      fakes.node_owner,
-                     '', '', ''
+                     '', '', '', '', ''
                      ),)
         self.assertEqual(datalist, tuple(data))
