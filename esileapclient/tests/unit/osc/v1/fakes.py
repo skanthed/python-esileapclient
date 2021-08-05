@@ -35,6 +35,8 @@ offer_name = "o1"
 parent_lease_uuid = "parent-lease-uuid"
 lease_name = "c1"
 node_name = "fake-node"
+node_uuid = "fake-uuid"
+node_owner = "fake-owner"
 
 OFFER = {
     'availabilities': json.loads(lease_availabilities),
@@ -75,5 +77,7 @@ LEASE = {
 }
 
 NODE = {
-    'name': node_name
+    'name': node_name,
+    'uuid': node_uuid,
+    'owner': node_owner
 }

@@ -28,8 +28,6 @@ class ListNode(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListNode, self).get_parser(prog_name)
 
-        # Detailed information is the same as not
-        # detailed right now, will be expanded later
         parser.add_argument(
             '--long',
             default=False,
@@ -48,7 +46,6 @@ class ListNode(command.Lister):
 
         data = client.node.list(filters)
 
-        # These two are the same right now, they just give the name
         if parsed_args.long:
             columns = NODE_RESOURCE.detailed_fields.keys()
             labels = NODE_RESOURCE.detailed_fields.values()

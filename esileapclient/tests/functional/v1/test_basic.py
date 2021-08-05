@@ -11,8 +11,8 @@ class BasicTests(ESIBaseTestClass):
     @classmethod
     def setUpClass(cls):
         super(BasicTests, cls).setUpClass()
-        cls._init_dummy_project(cls, 'parent', ['owner'])
-        cls._init_dummy_project(cls, 'child', ['lessee'], parent='parent')
+        cls._init_dummy_project(cls, 'parent', 'owner')
+        cls._init_dummy_project(cls, 'child', 'lessee', parent='parent')
 
     def setUp(self):
         super(BasicTests, self).setUp()

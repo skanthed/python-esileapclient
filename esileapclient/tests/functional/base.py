@@ -100,6 +100,9 @@ class ESIBaseTestClass(base.ClientTestBase):
     def _init_dummy_project(self, name, roles, parent=None):
         admin_client = self.clients['admin']
 
+        # NOTE: names created using tempest's data_utils.rand_name() function
+        #       will be prefixed with 'tempest-' and suffixed with randomly
+        #       generated characters to prevent name collision.
         project_name = data_utils.rand_name('esi-%s-project' % name)
         flags = '--domain default --enable -f json'
         if parent:
@@ -118,8 +121,11 @@ class ESIBaseTestClass(base.ClientTestBase):
             'domain': 'default'
         }
 
-        if roles is [] or type(roles) is not list:
-            raise ValueError('Invalid role list for dummy project %s' % name)
+        if roles is []:
+            raise ValueError('No roles specified when initializing dummy \
+                              project %s' % name)
+        elif type(roles) is str:
+            roles = [roles]
 
         for role in roles:
             if role not in ('owner', 'lessee', 'member'):

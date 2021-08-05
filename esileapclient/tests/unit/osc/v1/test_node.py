@@ -38,9 +38,48 @@ class TestNodeList(TestNode):
 
         collist = [
             "Name",
+            "Owner",
+            "Offer UUID",
+            "Lease UUID",
+            "Lessee"
         ]
 
         self.assertEqual(collist, list(columns))
 
-        datalist = ((fakes.node_name,),)
+        datalist = ((fakes.node_name,
+                     fakes.node_owner,
+                     '', '', ''
+                     ),)
+        self.assertEqual(datalist, tuple(data))
+
+    def test_node_list_long(self):
+        arglist = ['--long']
+        verifylist = [('long', True)]
+
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        columns, data = self.cmd.take_action(parsed_args)
+
+        filters = {
+        }
+
+        self.client_mock.node.list.assert_called_with(filters)
+
+        long_collist = [
+            "Name",
+            "UUID",
+            "Owner",
+            "Offer UUID",
+            "Lease UUID",
+            "Lessee",
+            "Future Offers",
+            "Future Leases"
+        ]
+
+        self.assertEqual(long_collist, list(columns))
+
+        datalist = ((fakes.node_name,
+                     fakes.node_uuid,
+                     fakes.node_owner,
+                     '', '', '', '', ''
+                     ),)
         self.assertEqual(datalist, tuple(data))

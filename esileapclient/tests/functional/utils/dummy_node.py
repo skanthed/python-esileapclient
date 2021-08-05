@@ -23,14 +23,11 @@ class DummyNode():
             }
         }
 
-        node = tempfile.mkstemp(prefix='', dir=node_dir, text=True)
-        node_fd = node[0]
-        node_path = node[1]
-        os.write(node_fd, json.dumps(dummy_node_info, indent=4).encode())
-        os.close(node_fd)
-
-        self.path = node_path
-        self.uuid = os.path.basename(node_path)
+        with tempfile.NamedTemporaryFile(prefix='', dir=node_dir,
+                                         mode='w+', delete=False) as node:
+            json.dump(dummy_node_info, node)
+            self.path = node.name
+            self.uuid = os.path.basename(node.name)
 
     def __del__(self):
         os.remove(self.path)
