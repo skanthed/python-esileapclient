@@ -178,6 +178,40 @@ class BasicTests(ESIBaseTestClass):
             for field in lease.keys():
                 self.assertEqual(lease[field], details[field])
 
+    def test_lease_show_offer_deleted(self):
+        """ Tests that leases created thru claiming an offer are deleted after
+                the claimed offer has been deleted.
+            Test steps:
+            1) (owner) Create an offer for an owned node.
+            2) Check that offer details were returned.
+            3) (lessee) Claim the offer created in step 1.
+            4) Check that lease details were returned.
+            5) (owner) Delete the offer created in step 1.
+            6) View the details of the lease created in step 4 to ensure the
+                lease's status is 'deleted'.
+            7) (lessee) If not, delete the lease manually. """
+        offer = esi.offer_create(self.clients['parent-owner'],
+                                 self.dummy_node.uuid,
+                                 resource_type='dummy_node',
+                                 lessee=self.projects['child']['name'])
+        self.assertNotEqual(offer, {})
+        self.addCleanup(esi.offer_delete,
+                        self.clients['parent-owner'],
+                        offer['uuid'],
+                        fail_ok=True)
+
+        lease = esi.offer_claim(self.clients['child-lessee'],
+                                offer['uuid'])
+        self.assertNotEqual(lease, {})
+        self.addCleanup(esi.lease_delete,
+                        self.clients['child-lessee'],
+                        lease['uuid'],
+                        fail_ok=True)
+
+        esi.offer_delete(self.clients['parent-owner'], offer['uuid'])
+        details = esi.lease_show(self.clients['child-lessee'], lease['uuid'])
+        self.assertEqual(details['status'], 'deleted')
+
     @pytest.mark.negative
     def test_offer_show_invalid_id(self):
         """ Tests that "esi offer show" properly handles being passed an

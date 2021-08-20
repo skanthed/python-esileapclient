@@ -13,7 +13,8 @@ class TimeTests(ESIBaseTestClass):
     def setUpClass(cls):
         super(TimeTests, cls).setUpClass()
         cls._init_dummy_project(cls, 'main', 'owner')
-        cls._init_dummy_project(cls, 'subproj1', 'lessee', parent='main')
+        cls._init_dummy_project(cls, 'subproj1', ['owner', 'lessee'],
+                                parent='main')
         cls._init_dummy_project(cls, 'subproj2', 'lessee', parent='main')
 
     def setUp(self):
@@ -319,8 +320,8 @@ class TimeTests(ESIBaseTestClass):
             3) Check that offer details were returned.
             4) Repeat steps 5 thru 7 with the following ranges (times are
                 relative to the time recorded in step 1):
-                - 5 minutes after thru 30 minutes after
-                - 30 minutes after thru 60 minutes after
+                - 5 minutes after thru 20 minutes after
+                - 20 minutes after thru 60 minutes after
                 - 5 minutes after thru 60 minutes after
             5) (subproj1) Attempt to claim the offer created in step 2 for a
                 time range outside of what was specified during creation.
@@ -356,6 +357,53 @@ class TimeTests(ESIBaseTestClass):
                                   start_time=str(start),
                                   end_time=str(end))
             self.assertIn(err, e.stderr.decode())
+
+    @pytest.mark.negative
+    @pytest.mark.slow
+    def test_offer_create_sublease_out_of_range(self):
+        """ Tests to ensure an offer for a leased node cannot be created for
+                a time period outside of the original lease's availability.
+            Test steps:
+            1) Record the current time.
+            2) (main-owner) Create a lease for an owned node, ending 30
+                minutes after the time recorded in step 1.
+            3) Check that lease details were returned.
+            4) Wait for the esi-leap manager service to move the lease from
+                the created state to the active state.
+            5) (subproj1-owner) Attempt to create an offer on the node leased
+                in step 2, starting 15 minutes after the time recorded in
+                step 1, and ending 45 minutes after.
+            6) Check that the command failed. (returned non-zero exit code)
+            7) Check that the proper error message was sent to stderr.
+            8) (main-owner) (cleanup) Delete the offer created in step 2. """
+        time_now = datetime.now()
+        lease_end_time = time_now + timedelta(minutes=30)
+        offer_start_time = time_now + timedelta(minutes=15)
+        offer_end_time = time_now + timedelta(minutes=45)
+
+        lease = esi.lease_create(self.clients['main-owner'],
+                                 self.dummy_node.uuid,
+                                 self.projects['subproj1']['name'],
+                                 resource_type='dummy_node',
+                                 end_time=str(lease_end_time))
+        self.assertNotEqual(lease, {})
+        self.addCleanup(esi.lease_delete,
+                        self.clients['main-owner'],
+                        lease['uuid'])
+
+        time.sleep(65)
+
+        # NOTE: This error should be handled differently. When the way this
+        #       error is handled changes, this too should change.
+        err = 'Access was denied to dummy_node %s.' % self.dummy_node.uuid
+        e = self.assertRaises(CommandFailed,
+                              esi.offer_create,
+                              self.clients['subproj1-owner'],
+                              self.dummy_node.uuid,
+                              resource_type='dummy_node',
+                              start_time=str(offer_start_time),
+                              end_time=str(offer_end_time))
+        self.assertIn(err, e.stderr.decode())
 
     @pytest.mark.negative
     @pytest.mark.slow
