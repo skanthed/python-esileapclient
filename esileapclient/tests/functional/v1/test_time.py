@@ -393,9 +393,9 @@ class TimeTests(ESIBaseTestClass):
 
         time.sleep(65)
 
-        # NOTE: This error should be handled differently. When the way this
-        #       error is handled changes, this too should change.
-        err = 'Access was denied to dummy_node %s.' % self.dummy_node.uuid
+        err = ('You do not have permissions on dummy_node %s for the time '
+               'range %s - %s.') % (self.dummy_node.uuid,
+                                    str(offer_start_time), str(offer_end_time))
         e = self.assertRaises(CommandFailed,
                               esi.offer_create,
                               self.clients['subproj1-owner'],
