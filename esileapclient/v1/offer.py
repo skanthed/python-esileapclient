@@ -33,6 +33,7 @@ class Offer(base.Resource):
         'project_id': "Project ID",
         'properties': "Properties",
         'resource': "Resource",
+        'resource_class': "Resource Class",
         'resource_type': "Resource Type",
         'resource_uuid': "Resource UUID",
         'start_time': "Start Time",
@@ -43,6 +44,7 @@ class Offer(base.Resource):
     fields = {
         'uuid': "UUID",
         'resource': "Resource",
+        'resource_class': "Resource Class",
         'lessee': "Lessee",
         'start_time': "Start Time",
         'end_time': "End Time",

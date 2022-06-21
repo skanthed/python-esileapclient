@@ -63,7 +63,6 @@ class CreateLease(command.ShowOne):
             dest='start_time',
             required=False,
             help="Time when the resource will become usable.")
-
         return parser
 
     def take_action(self, parsed_args):
@@ -143,6 +142,11 @@ class ListLease(command.Lister):
             dest='resource_uuid',
             required=False,
             help="Show all leases with given resource-uuid.")
+        parser.add_argument(
+            '--resource-class',
+            dest='resource_class',
+            required=False,
+            help="Show all leases with given resource-class.")
 
         return parser
 
@@ -161,7 +165,8 @@ class ListLease(command.Lister):
             'owner_id': parsed_args.owner_id,
             'view': 'all' if parsed_args.all else None,
             'resource_type': parsed_args.resource_type,
-            'resource_uuid': parsed_args.resource_uuid
+            'resource_uuid': parsed_args.resource_uuid,
+            'resource_class': parsed_args.resource_class
         }
 
         data = client.lease.list(filters)

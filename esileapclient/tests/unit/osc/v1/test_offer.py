@@ -107,7 +107,8 @@ class TestOfferList(TestOffer):
             parsed_args.availability_range else None,
             'project_id': parsed_args.project_id,
             'resource_type': parsed_args.resource_type,
-            'resource_uuid': parsed_args.resource_uuid
+            'resource_uuid': parsed_args.resource_uuid,
+            'resource_class': parsed_args.resource_class
         }
 
         self.client_mock.offer.list.assert_called_with(filters)
@@ -115,17 +116,19 @@ class TestOfferList(TestOffer):
         collist = [
             "UUID",
             "Resource",
+            "Resource Class",
             "Lessee",
             "Start Time",
             "End Time",
             "Status",
-            "Availabilities"
+            "Availabilities",
         ]
 
         self.assertEqual(collist, list(columns))
 
         datalist = ((fakes.offer_uuid,
                      fakes.lease_resource,
+                     fakes.lease_resource_class,
                      fakes.offer_lessee,
                      fakes.lease_start_time,
                      fakes.lease_end_time,
@@ -153,7 +156,8 @@ class TestOfferList(TestOffer):
             parsed_args.availability_range else None,
             'project_id': parsed_args.project_id,
             'resource_type': parsed_args.resource_type,
-            'resource_uuid': parsed_args.resource_uuid
+            'resource_uuid': parsed_args.resource_uuid,
+            'resource_class': parsed_args.resource_class
         }
 
         self.client_mock.offer.list.assert_called_with(filters)
@@ -169,11 +173,12 @@ class TestOfferList(TestOffer):
             "Project ID",
             "Properties",
             "Resource",
+            "Resource Class",
             "Resource Type",
             "Resource UUID",
             "Start Time",
             "Status",
-            "UUID",
+            "UUID"
         ]
 
         self.assertEqual(long_collist, list(columns))
@@ -188,6 +193,7 @@ class TestOfferList(TestOffer):
                      fakes.lease_project_id,
                      json.loads(fakes.lease_properties),
                      fakes.lease_resource,
+                     fakes.lease_resource_class,
                      fakes.lease_resource_type,
                      fakes.lease_resource_uuid,
                      fakes.lease_start_time,
@@ -227,11 +233,12 @@ class TestOfferShow(TestOffer):
             "project_id",
             "properties",
             "resource",
+            "resource_class",
             "resource_type",
             "resource_uuid",
             "start_time",
             "status",
-            "uuid",
+            "uuid"
         )
 
         self.assertEqual(collist, columns)
@@ -246,11 +253,12 @@ class TestOfferShow(TestOffer):
                     fakes.lease_project_id,
                     json.loads(fakes.lease_properties),
                     fakes.lease_resource,
+                    fakes.lease_resource_class,
                     fakes.lease_resource_type,
                     fakes.lease_resource_uuid,
                     fakes.lease_start_time,
                     fakes.lease_status,
-                    fakes.offer_uuid
+                    fakes.offer_uuid,
                     )
         self.assertEqual(datalist, tuple(data))
 
