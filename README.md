@@ -16,11 +16,14 @@ The openstack lease command-line interface is available when the lease plugin (i
 
 The client uses keystone to look for the lease service and currently does not allow for endpoint overriding.
 
-To install this package,
+To install this package using PyPI,
+ - `pip install python-esileapclient`
+ 
+To install this package without using PyPI,
  - clone this repository
  - install all requirements:  `pip install -r requirements.txt`
  - install:    `python setup.py install`
-
+ 
 Examples:
 
     openstack esi offer list
