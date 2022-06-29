@@ -10,11 +10,7 @@ This is a client for the OpenStack Lease API. It provides:
 
 python-esileapclient is licensed under the Apache License, Version 2.0, like the rest of OpenStack.
 
-### openstack lease CLI
-
-The openstack lease command-line interface is available when the lease plugin (included in this package) is used with the `OpenStackClient https://docs.openstack.org/python-openstackclient/latest/
-
-The client uses keystone to look for the lease service and currently does not allow for endpoint overriding.
+### Installation
 
 To install as a package:
  - `pip install python-esileapclient`
@@ -23,6 +19,12 @@ To install as a source:,
  - clone this repository : 'git clone https://github.com/CCI-MOC/python-esileapclient'
  - install all requirements:  `pip install -r requirements.txt`
  - install:    `python setup.py install`
+
+### openstack lease CLI
+
+The openstack lease command-line interface is available when the lease plugin (included in this package) is used with the `OpenStackClient https://docs.openstack.org/python-openstackclient/latest/
+
+The client uses keystone to look for the lease service and currently does not allow for endpoint overriding.
 
 Examples:
 
