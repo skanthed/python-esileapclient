@@ -72,6 +72,11 @@ class MDCListOffer(command.Lister):
             dest='resource_type',
             required=False,
             help="Show all offers with given resource-type.")
+        parser.add_argument(
+            '--resource-class',
+            dest='resource_class',
+            required=False,
+            help="Show all leases with given resource-class.")
 
         return parser
 
@@ -95,6 +100,7 @@ class MDCListOffer(command.Lister):
             'available_end_time': str(parsed_args.availability_range[1]) if
             parsed_args.availability_range else None,
             'resource_type': parsed_args.resource_type,
+            'resource_class': parsed_args.resource_class,
         }
 
         for c in cloud_regions:
@@ -145,7 +151,12 @@ class MDCClaimOffer(command.Lister):
             '--resource-type',
             dest='resource_type',
             required=False,
-            help="Show all offers with given resource-type.")
+            help="Specify offers' resource-type.")
+        parser.add_argument(
+            '--resource-class',
+            dest='resource_class',
+            required=False,
+            help="Specify offers' resource-class.")
 
         return parser
 
@@ -163,6 +174,7 @@ class MDCClaimOffer(command.Lister):
             'available_end_time': str(parsed_args.end_time) if
             parsed_args.end_time else None,
             'resource_type': parsed_args.resource_type,
+            'resource_class': parsed_args.resource_class,
         }
 
         available_offers = []

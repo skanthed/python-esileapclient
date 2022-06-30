@@ -73,6 +73,7 @@ class TestMDCOfferList(TestMDCOffer):
             'available_end_time': str(parsed_args.availability_range[1]) if
             parsed_args.availability_range else None,
             'resource_type': parsed_args.resource_type,
+            'resource_class': parsed_args.resource_class,
         }
 
         self.client_mock.offer.list.assert_called_with(filters)
@@ -82,11 +83,12 @@ class TestMDCOfferList(TestMDCOffer):
             "Region",
             "UUID",
             "Resource",
+            "Resource Class",
             "Lessee",
             "Start Time",
             "End Time",
             "Status",
-            "Availabilities"
+            "Availabilities",
         ]
 
         self.assertEqual(collist, list(columns))
@@ -94,20 +96,22 @@ class TestMDCOfferList(TestMDCOffer):
         datalist = (('cloud1', 'regionOne',
                      fakes.offer_uuid,
                      fakes.lease_resource,
+                     fakes.lease_resource_class,
                      fakes.offer_lessee,
                      fakes.lease_start_time,
                      fakes.lease_end_time,
                      fakes.lease_status,
-                     json.loads(fakes.lease_availabilities)
+                     json.loads(fakes.lease_availabilities),
                      ),
                     ('cloud2', 'regionTwo',
                      fakes.offer_uuid,
                      fakes.lease_resource,
+                     fakes.lease_resource_class,
                      fakes.offer_lessee,
                      fakes.lease_start_time,
                      fakes.lease_end_time,
                      fakes.lease_status,
-                     json.loads(fakes.lease_availabilities)
+                     json.loads(fakes.lease_availabilities),
                      ))
         self.assertEqual(datalist, tuple(data))
 
@@ -135,6 +139,7 @@ class TestMDCOfferList(TestMDCOffer):
             'available_end_time': str(parsed_args.availability_range[1]) if
             parsed_args.availability_range else None,
             'resource_type': parsed_args.resource_type,
+            'resource_class': parsed_args.resource_class,
         }
 
         self.client_mock.offer.list.assert_called_with(filters)
@@ -144,11 +149,12 @@ class TestMDCOfferList(TestMDCOffer):
             "Region",
             "UUID",
             "Resource",
+            "Resource Class",
             "Lessee",
             "Start Time",
             "End Time",
             "Status",
-            "Availabilities"
+            "Availabilities",
         ]
 
         self.assertEqual(collist, list(columns))
@@ -156,11 +162,12 @@ class TestMDCOfferList(TestMDCOffer):
         datalist = (('cloud2', 'regionTwo',
                      fakes.offer_uuid,
                      fakes.lease_resource,
+                     fakes.lease_resource_class,
                      fakes.offer_lessee,
                      fakes.lease_start_time,
                      fakes.lease_end_time,
                      fakes.lease_status,
-                     json.loads(fakes.lease_availabilities)
+                     json.loads(fakes.lease_availabilities),
                      ),)
         self.assertEqual(datalist, tuple(data))
 
@@ -208,6 +215,7 @@ class TestMDCOfferClaim(TestMDCOffer):
             'available_start_time': str(parsed_args.start_time),
             'available_end_time': str(parsed_args.end_time),
             'resource_type': parsed_args.resource_type,
+            'resource_class': parsed_args.resource_class,
         }
 
         self.client_mock.offer.list.assert_called_with(list_filters)
@@ -221,11 +229,12 @@ class TestMDCOfferClaim(TestMDCOffer):
             "Region",
             "UUID",
             "Resource",
+            "Resource Class",
             "Project",
             "Start Time",
             "End Time",
             "Offer UUID",
-            "Status"
+            "Status",
         ]
 
         self.assertEqual(collist, list(columns))
@@ -233,20 +242,22 @@ class TestMDCOfferClaim(TestMDCOffer):
         cloud1_lease = ('cloud1', 'regionOne',
                         fakes.lease_uuid,
                         fakes.lease_resource,
+                        fakes.lease_resource_class,
                         fakes.lease_project,
                         fakes.lease_start_time,
                         fakes.lease_end_time,
                         fakes.offer_uuid,
-                        fakes.lease_status,
+                        fakes.lease_status
                         )
         cloud2_lease = ('cloud2', 'regionTwo',
                         fakes.lease_uuid,
                         fakes.lease_resource,
+                        fakes.lease_resource_class,
                         fakes.lease_project,
                         fakes.lease_start_time,
                         fakes.lease_end_time,
                         fakes.offer_uuid,
-                        fakes.lease_status,
+                        fakes.lease_status
                         )
 
         parsed_data = tuple(data)
@@ -274,6 +285,7 @@ class TestMDCOfferClaim(TestMDCOffer):
             'available_start_time': str(parsed_args.start_time),
             'available_end_time': str(parsed_args.end_time),
             'resource_type': parsed_args.resource_type,
+            'resource_class': parsed_args.resource_class,
         }
 
         self.client_mock.offer.list.assert_called_with(list_filters)
@@ -287,11 +299,12 @@ class TestMDCOfferClaim(TestMDCOffer):
             "Region",
             "UUID",
             "Resource",
+            "Resource Class",
             "Project",
             "Start Time",
             "End Time",
             "Offer UUID",
-            "Status"
+            "Status",
         ]
 
         self.assertEqual(collist, list(columns))
@@ -299,6 +312,7 @@ class TestMDCOfferClaim(TestMDCOffer):
         cloud1_lease = ('cloud1', 'regionOne',
                         fakes.lease_uuid,
                         fakes.lease_resource,
+                        fakes.lease_resource_class,
                         fakes.lease_project,
                         fakes.lease_start_time,
                         fakes.lease_end_time,
@@ -330,6 +344,7 @@ class TestMDCOfferClaim(TestMDCOffer):
             'available_start_time': str(parsed_args.start_time),
             'available_end_time': str(parsed_args.end_time),
             'resource_type': parsed_args.resource_type,
+            'resource_class': parsed_args.resource_class,
         }
 
         self.client_mock.offer.list.assert_called_with(list_filters)

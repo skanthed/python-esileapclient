@@ -66,6 +66,7 @@ class TestMDCLeaseList(TestMDCLease):
             'end_time': str(parsed_args.time_range[1]) if
             parsed_args.time_range else None,
             'resource_type': parsed_args.resource_type,
+            'resource_class': parsed_args.resource_class,
         }
 
         self.client_mock.lease.list.assert_called_with(filters)
@@ -75,11 +76,12 @@ class TestMDCLeaseList(TestMDCLease):
             "Region",
             "UUID",
             "Resource",
+            "Resource Class",
             "Project",
             "Start Time",
             "End Time",
             "Offer UUID",
-            "Status"
+            "Status",
         ]
 
         self.assertEqual(collist, list(columns))
@@ -87,6 +89,7 @@ class TestMDCLeaseList(TestMDCLease):
         datalist = (('cloud1', 'regionOne',
                      fakes.lease_uuid,
                      fakes.lease_resource,
+                     fakes.lease_resource_class,
                      fakes.lease_project,
                      fakes.lease_start_time,
                      fakes.lease_end_time,
@@ -96,6 +99,7 @@ class TestMDCLeaseList(TestMDCLease):
                     ('cloud2', 'regionTwo',
                      fakes.lease_uuid,
                      fakes.lease_resource,
+                     fakes.lease_resource_class,
                      fakes.lease_project,
                      fakes.lease_start_time,
                      fakes.lease_end_time,
@@ -124,6 +128,7 @@ class TestMDCLeaseList(TestMDCLease):
             'end_time': str(parsed_args.time_range[1]) if
             parsed_args.time_range else None,
             'resource_type': parsed_args.resource_type,
+            'resource_class': parsed_args.resource_class,
         }
 
         self.client_mock.lease.list.assert_called_with(filters)
@@ -133,11 +138,12 @@ class TestMDCLeaseList(TestMDCLease):
             "Region",
             "UUID",
             "Resource",
+            "Resource Class",
             "Project",
             "Start Time",
             "End Time",
             "Offer UUID",
-            "Status"
+            "Status",
         ]
 
         self.assertEqual(collist, list(columns))
@@ -145,6 +151,7 @@ class TestMDCLeaseList(TestMDCLease):
         datalist = (('cloud2', 'regionTwo',
                      fakes.lease_uuid,
                      fakes.lease_resource,
+                     fakes.lease_resource_class,
                      fakes.lease_project,
                      fakes.lease_start_time,
                      fakes.lease_end_time,

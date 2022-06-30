@@ -18,7 +18,8 @@ def offer_delete(client, offer_uuid, fail_ok=False):
 
 def offer_list(client, parse=True, fail_ok=False, **kwargs):
     valid_flags = ('long', 'status', 'project', 'resource_uuid',
-                   'resource_type', 'time_range', 'availability_range')
+                   'resource_type', 'time_range', 'availability_range',
+                   'resource_class')
     flags = utils.kwargs_to_flags(valid_flags, kwargs)
     flags += ' -f json' if parse else ''
 
@@ -55,7 +56,8 @@ def lease_create(client, node_uuid, lessee, parse=True,
 
 def lease_list(client, parse=True, fail_ok=False, **kwargs):
     valid_flags = ('long', 'all', 'status', 'offer_uuid', 'time_range',
-                   'project', 'owner', 'resource_type', 'resource_uuid')
+                   'project', 'owner', 'resource_type', 'resource_uuid',
+                   'resource_class')
     flags = utils.kwargs_to_flags(valid_flags, kwargs)
     flags += ' -f json' if parse else ''
 

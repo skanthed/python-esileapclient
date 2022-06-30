@@ -24,6 +24,7 @@ lease_properties = "{}"
 lease_resource = "dummy-node-1213123123"
 lease_resource_type = "dummy_node"
 lease_resource_uuid = "1213123123"
+lease_resource_class = 'baremetal'
 lease_start_time = "2010"
 lease_fulfill_time = "2010"
 lease_status = "fake_status"
@@ -51,6 +52,7 @@ OFFER = {
     'resource': lease_resource,
     'resource_type': lease_resource_type,
     'resource_uuid': lease_resource_uuid,
+    'resource_class': lease_resource_class,
     'start_time': lease_start_time,
     'status': lease_status,
     'uuid': offer_uuid
@@ -71,6 +73,7 @@ LEASE = {
     'resource': lease_resource,
     'resource_type': lease_resource_type,
     'resource_uuid': lease_resource_uuid,
+    'resource_class': lease_resource_class,
     'start_time': lease_start_time,
     'status': lease_status,
     'uuid': lease_uuid

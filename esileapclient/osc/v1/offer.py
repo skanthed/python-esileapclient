@@ -143,6 +143,11 @@ class ListOffer(command.Lister):
             dest='resource_uuid',
             required=False,
             help="Show all offers with given resource-uuid.")
+        parser.add_argument(
+            '--resource-class',
+            dest='resource_class',
+            required=False,
+            help="Show all leases with given resource-class.")
 
         return parser
 
@@ -165,7 +170,8 @@ class ListOffer(command.Lister):
 
             'project_id': parsed_args.project_id,
             'resource_type': parsed_args.resource_type,
-            'resource_uuid': parsed_args.resource_uuid
+            'resource_uuid': parsed_args.resource_uuid,
+            'resource_class': parsed_args.resource_class
         }
 
         data = client.offer.list(filters)
@@ -236,7 +242,7 @@ class ClaimOffer(command.ShowOne):
         parser.add_argument(
             "offer_uuid",
             metavar="<offer_uuid>",
-            help="Resource type")
+            help="Offer UUID")
         parser.add_argument(
             '--end-time',
             dest='end_time',
