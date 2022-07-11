@@ -76,7 +76,8 @@ class BasicTests(ESIBaseTestClass):
         offer = esi.offer_create(self.clients['parent-owner'],
                                  self.dummy_node.uuid,
                                  resource_type='dummy_node',
-                                 lessee=self.projects['child']['name'])
+                                 lessee=self.projects['child']['name'],
+                                 start_time='9999-01-01')
         self.assertNotEqual(offer, {})
         self.addCleanup(esi.offer_delete,
                         self.clients['parent-owner'],
