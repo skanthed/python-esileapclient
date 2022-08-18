@@ -117,7 +117,7 @@ class ListLease(command.Lister):
             nargs=2,
             required=False,
             help="Show all leases with start and end times "
-                 "which begin and end in the given range."
+                 "which intersect with the given range."
                  "Must pass in two valid datetime strings."
                  "Example: --time-range 2020-06-30T00:00:00"
                  "2021-06-30T00:00:00")
