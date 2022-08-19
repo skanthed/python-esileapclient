@@ -39,16 +39,18 @@ class TestNodeList(TestNode):
         collist = [
             "Name",
             "Owner",
+            "Lessee",
+            "Provision State",
+            "Maintenance",
             "Offer UUID",
             "Lease UUID",
-            "Lessee"
         ]
 
         self.assertEqual(collist, list(columns))
 
         datalist = ((fakes.node_name,
                      fakes.node_owner,
-                     '', '', ''
+                     '', '', '', '', ''
                      ),)
         self.assertEqual(datalist, tuple(data))
 
@@ -65,21 +67,23 @@ class TestNodeList(TestNode):
         self.client_mock.node.list.assert_called_with(filters)
 
         long_collist = [
-            "Name",
             "UUID",
+            "Name",
             "Owner",
+            "Lessee",
+            "Provision State",
+            "Maintenance",
             "Offer UUID",
             "Lease UUID",
-            "Lessee",
             "Future Offers",
             "Future Leases"
         ]
 
         self.assertEqual(long_collist, list(columns))
 
-        datalist = ((fakes.node_name,
-                     fakes.node_uuid,
+        datalist = ((fakes.node_uuid,
+                     fakes.node_name,
                      fakes.node_owner,
-                     '', '', '', '', ''
+                     '', '', '', '', '', '', ''
                      ),)
         self.assertEqual(datalist, tuple(data))
