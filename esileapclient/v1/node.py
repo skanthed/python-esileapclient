@@ -21,12 +21,14 @@ LOG = logging.getLogger(__name__)
 class Node(base.Resource):
 
     detailed_fields = {
-        'name': "Name",
         'uuid': "UUID",
+        'name': "Name",
         'owner': "Owner",
+        'lessee': "Lessee",
+        'provision_state': "Provision State",
+        'maintenance': "Maintenance",
         'offer_uuid': "Offer UUID",
         'lease_uuid': "Lease UUID",
-        'lessee': "Lessee",
         'future_offers': "Future Offers",
         'future_leases': "Future Leases"
     }
@@ -34,14 +36,17 @@ class Node(base.Resource):
     fields = {
         'name': "Name",
         'owner': "Owner",
+        'lessee': "Lessee",
+        'provision_state': "Provision State",
+        'maintenance': "Maintenance",
         'offer_uuid': "Offer UUID",
         'lease_uuid': "Lease UUID",
-        'lessee': "Lessee"
     }
 
     _creation_attributes = ['name', 'uuid', 'owner', 'offer_uuid',
                             'lessee', 'lease_uuid', 'future_offers',
-                            'future_leases']
+                            'future_leases', 'provision_state',
+                            'maintenace']
 
     def __repr__(self):
         return "<Node %s>" % self._info
