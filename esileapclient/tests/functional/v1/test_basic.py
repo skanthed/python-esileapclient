@@ -352,3 +352,28 @@ class BasicTests(ESIBaseTestClass):
                               resource_type=fake_type)
         self.assertIn('%s resource type unknown.' % fake_type,
                       e.stderr.decode())
+
+    def test_node_list_basic(self):
+        """ Tests basic functionality of "esi node list" when executed by
+                both node owners and lessees with access to offers.
+            Test steps:
+            1) (owner) Create an offer for an owned node.
+            2) Check that offer details were returned.
+            3) (owner) Check that the output of 'offer list' contains the new
+                offer.
+            4) (lessee) Check that the output of 'offer list' contains the
+                new offer.
+            5) (cleanup) (owner) Delete the offer created in step 1. """
+        offer = esi.offer_create(self.clients['parent-owner'],
+                                self.dummy_node.uuid,
+                                resource_type='dummy_node',
+                                lessee=self.projects['child']['name'])
+        self.assertNotEqual(offer, {})
+        self.addCleanup(esi.offer_delete,
+                        self.clients['parent-owner'],
+                        offer['uuid'])
+
+        for client_name in 'parent-owner':
+            listings = esi.node_list(self.clients[client_name],self.dummy_node.uuid)
+            self.assertNotEqual(listings, [])
+            self.assertIn(offer['uuid'], [x['UUID'] for x in listings])

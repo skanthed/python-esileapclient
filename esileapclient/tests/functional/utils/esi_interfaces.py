@@ -36,6 +36,12 @@ def offer_show(client, offer_uuid, parse=True, fail_ok=False):
                     args=(offer_uuid,), parse=parse, fail_ok=fail_ok)
 
 
+def node_list(client, node_uuid, parse=True, fail_ok=False):
+    valid_flags = ('long')
+    return _execute(client, cmd='node list', valid_flags=None, kwargs=None,
+                    args=(node_uuid,), parse=parse, fail_ok=fail_ok)
+
+
 def offer_claim(client, offer_uuid, parse=True, fail_ok=False, **kwargs):
     valid_flags = ('start_time', 'end_time', 'properties')
     return _execute(client, cmd='offer claim', valid_flags=valid_flags,
