@@ -43,6 +43,13 @@ def offer_claim(client, offer_uuid, parse=True, fail_ok=False, **kwargs):
                     fail_ok=fail_ok)
 
 
+def node_list(client, parse=True, fail_ok=False, **kwargs):
+    valid_flags = ('long')
+    return _execute(client, cmd='node list', valid_flags=valid_flags,
+                    kwargs=kwargs, args=(), parse=parse,
+                    fail_ok=fail_ok)
+
+
 def lease_create(client, node_uuid, lessee, parse=True, fail_ok=False,
                  **kwargs):
     valid_flags = ('resource_type', 'start_time', 'end_time',

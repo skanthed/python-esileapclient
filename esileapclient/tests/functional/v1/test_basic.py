@@ -1,4 +1,6 @@
 import pytest
+import unittest
+import os
 from tempest.lib.exceptions import CommandFailed
 from tempest.lib.common.utils import data_utils
 
@@ -212,6 +214,43 @@ class BasicTests(ESIBaseTestClass):
         esi.offer_delete(self.clients['parent-owner'], offer['uuid'])
         details = esi.lease_show(self.clients['child-lessee'], lease['uuid'])
         self.assertEqual(details['status'], 'deleted')
+
+    @unittest.skipIf(list(map(lambda x: os.getenv('OS_FUNCTIONAL_NODE_%s' % x),
+                              ['NAME', 'UUID'])) == [None, None],
+                     'Neither env variable OS_FUNCTIONAL_NODE_UUID \
+                      nor OS_FUNCTIONAL_NODE_NAME is set')
+    def test_node_list_long(self):
+        """ Tests functionality "esi node list" using node_uuid or node name.
+            checks node_uuid or node_name is present in node list or not.
+            Test steps:
+            1) Set either of the environment variables using
+               export OS_FUNCTIONAL_NODE_UUID=node_uuid or
+               export OS_FUNCTIONAL_NODE_NAME=node_name
+            2) Checks that the output of "node list" contains
+               the node uuid or node name it's tested with. """
+        node_uuid = os.getenv('OS_FUNCTIONAL_NODE_UUID')
+        node_name = os.getenv('OS_FUNCTIONAL_NODE_NAME')
+        listings = esi.node_list(self.clients['admin'], long=True)
+        self.assertNotEqual(listings, [])
+        if node_uuid is not None:
+            self.assertIn(node_uuid, [x['UUID'] for x in listings])
+        if node_name is not None:
+            self.assertIn(node_name, [x['Name'] for x in listings])
+
+    @unittest.skipIf('OS_FUNCTIONAL_NODE_NAME' not in os.environ.keys(),
+                     'Environment variable OS_FUNCTIONAL_NODE_NAME not set')
+    def test_node_list_basic(self):
+        """ Tests basic functionality of "esi node list" when default behavior
+            is invoked. Checks if node_name is present in node list.
+            Test steps:
+            1) Set the environment variable using
+               export OS_FUNCTIONAL_NODE_IDENT_NAME=node_name
+            2) Checks that the output of "node list" contains
+               the node name it's tested with. """
+        node_name = os.getenv('OS_FUNCTIONAL_NODE_IDENT_NAME')
+        listings = esi.node_list(self.clients['admin'])
+        self.assertNotEqual(listings, [])
+        self.assertIn(node_name, [x['Name'] for x in listings])
 
     @pytest.mark.negative
     def test_offer_show_invalid_id(self):
