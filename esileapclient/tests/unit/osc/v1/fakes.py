@@ -29,6 +29,7 @@ lease_start_time = "2010"
 lease_fulfill_time = "2010"
 lease_status = "fake_status"
 lease_uuid = "9999999"
+lease_purpose = "fake_purpose"
 offer_uuid = "111111111"
 offer_lessee = 'lease-project'
 offer_lessee_id = "zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzzzzzz"
@@ -76,7 +77,8 @@ LEASE = {
     'resource_class': lease_resource_class,
     'start_time': lease_start_time,
     'status': lease_status,
-    'uuid': lease_uuid
+    'uuid': lease_uuid,
+    'purpose': lease_purpose,
 }
 
 NODE = {

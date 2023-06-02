@@ -67,6 +67,7 @@ class TestMDCLeaseList(TestMDCLease):
             parsed_args.time_range else None,
             'resource_type': parsed_args.resource_type,
             'resource_class': parsed_args.resource_class,
+            'purpose': parsed_args.purpose,
         }
 
         self.client_mock.lease.list.assert_called_with(filters)
@@ -82,6 +83,7 @@ class TestMDCLeaseList(TestMDCLease):
             "End Time",
             "Offer UUID",
             "Status",
+            "Purpose",
         ]
 
         self.assertEqual(collist, list(columns))
@@ -95,6 +97,7 @@ class TestMDCLeaseList(TestMDCLease):
                      fakes.lease_end_time,
                      fakes.offer_uuid,
                      fakes.lease_status,
+                     fakes.lease_purpose,
                      ),
                     ('cloud2', 'regionTwo',
                      fakes.lease_uuid,
@@ -105,6 +108,7 @@ class TestMDCLeaseList(TestMDCLease):
                      fakes.lease_end_time,
                      fakes.offer_uuid,
                      fakes.lease_status,
+                     fakes.lease_purpose,
                      ))
         self.assertEqual(datalist, tuple(data))
 
@@ -129,6 +133,7 @@ class TestMDCLeaseList(TestMDCLease):
             parsed_args.time_range else None,
             'resource_type': parsed_args.resource_type,
             'resource_class': parsed_args.resource_class,
+            'purpose': parsed_args.purpose,
         }
 
         self.client_mock.lease.list.assert_called_with(filters)
@@ -144,6 +149,7 @@ class TestMDCLeaseList(TestMDCLease):
             "End Time",
             "Offer UUID",
             "Status",
+            "Purpose",
         ]
 
         self.assertEqual(collist, list(columns))
@@ -157,5 +163,6 @@ class TestMDCLeaseList(TestMDCLease):
                      fakes.lease_end_time,
                      fakes.offer_uuid,
                      fakes.lease_status,
+                     fakes.lease_purpose,
                      ),)
         self.assertEqual(datalist, tuple(data))

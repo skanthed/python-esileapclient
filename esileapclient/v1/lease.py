@@ -39,6 +39,7 @@ class Lease(base.Resource):
         'start_time': "Start Time",
         'status': "Status",
         'uuid': "UUID",
+        'purpose': "Purpose",
     }
 
     fields = {
@@ -50,11 +51,12 @@ class Lease(base.Resource):
         'end_time': "End Time",
         'offer_uuid': "Offer UUID",
         'status': "Status",
+        'purpose': "Purpose",
     }
 
     _creation_attributes = ['start_time', 'end_time', 'status', 'name',
                             'properties', 'project_id', 'resource_type',
-                            'resource_uuid']
+                            'resource_uuid', 'purpose']
 
     def __repr__(self):
         return "<Lease %s>" % self._info

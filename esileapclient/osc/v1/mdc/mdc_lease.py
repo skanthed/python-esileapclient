@@ -63,7 +63,11 @@ class MDCListLease(command.Lister):
             dest='resource_class',
             required=False,
             help="Show all leases with given resource-class.")
-
+        parser.add_argument(
+            '--purpose',
+            dest='purpose',
+            required=False,
+            help="Show all the leases with given purpose")
         return parser
 
     def take_action(self, parsed_args):
@@ -82,6 +86,7 @@ class MDCListLease(command.Lister):
             parsed_args.time_range else None,
             'resource_type': parsed_args.resource_type,
             'resource_class': parsed_args.resource_class,
+            'purpose': parsed_args.purpose,
         }
 
         for c in cloud_regions:
