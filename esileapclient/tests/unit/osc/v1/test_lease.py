@@ -50,6 +50,7 @@ class TestCreateLease(TestLease):
             '--properties', fakes.lease_properties,
             '--resource-type', fakes.lease_resource_type,
             '--start-time', fakes.lease_start_time,
+            '--purpose', fakes.lease_purpose,
         ]
 
         verifylist = [
@@ -60,6 +61,7 @@ class TestCreateLease(TestLease):
             ('resource_type', fakes.lease_resource_type),
             ('resource_uuid', fakes.lease_resource_uuid),
             ('start_time', fakes.lease_start_time),
+            ('purpose', fakes.lease_purpose),
         ]
 
         parsed_args = self.check_parser(self.cmd, arglist, verifylist)
@@ -74,6 +76,7 @@ class TestCreateLease(TestLease):
             'name': fakes.lease_name,
             'properties': json.loads(fakes.lease_properties),
             'start_time': fakes.lease_start_time,
+            'purpose': fakes.lease_purpose,
         }
 
         self.client_mock.lease.create.assert_called_once_with(**args)
@@ -108,7 +111,8 @@ class TestLeaseList(TestLease):
             'view': 'all' if parsed_args.all else None,
             'resource_type': parsed_args.resource_type,
             'resource_uuid': parsed_args.resource_uuid,
-            'resource_class': parsed_args.resource_class
+            'resource_class': parsed_args.resource_class,
+            'purpose': parsed_args.purpose
         }
 
         self.client_mock.lease.list.assert_called_with(filters)
@@ -122,6 +126,7 @@ class TestLeaseList(TestLease):
             "End Time",
             "Offer UUID",
             "Status",
+            "Purpose",
         ]
 
         self.assertEqual(collist, list(columns))
@@ -133,7 +138,8 @@ class TestLeaseList(TestLease):
                      fakes.lease_start_time,
                      fakes.lease_end_time,
                      fakes.offer_uuid,
-                     fakes.lease_status
+                     fakes.lease_status,
+                     fakes.lease_purpose
                      ),)
         self.assertEqual(datalist, tuple(data))
 
@@ -156,7 +162,8 @@ class TestLeaseList(TestLease):
             'view': 'all' if parsed_args.all else None,
             'resource_type': parsed_args.resource_type,
             'resource_uuid': parsed_args.resource_uuid,
-            'resource_class': parsed_args.resource_class
+            'resource_class': parsed_args.resource_class,
+            'purpose': parsed_args.purpose
         }
 
         self.client_mock.lease.list.assert_called_with(filters)
@@ -180,6 +187,7 @@ class TestLeaseList(TestLease):
             "Start Time",
             "Status",
             "UUID",
+            "Purpose",
         ]
 
         self.assertEqual(long_collist, list(columns))
@@ -201,7 +209,8 @@ class TestLeaseList(TestLease):
                      fakes.lease_resource_uuid,
                      fakes.lease_start_time,
                      fakes.lease_status,
-                     fakes.lease_uuid
+                     fakes.lease_uuid,
+                     fakes.lease_purpose
                      ),)
         self.assertEqual(datalist, tuple(data))
 
@@ -237,6 +246,7 @@ class TestLeaseShow(TestLease):
             "project",
             "project_id",
             "properties",
+            "purpose",
             "resource",
             "resource_class",
             "resource_type",
@@ -259,6 +269,7 @@ class TestLeaseShow(TestLease):
                     fakes.lease_project,
                     fakes.lease_project_id,
                     json.loads(fakes.lease_properties),
+                    fakes.lease_purpose,
                     fakes.lease_resource,
                     fakes.lease_resource_class,
                     fakes.lease_resource_type,

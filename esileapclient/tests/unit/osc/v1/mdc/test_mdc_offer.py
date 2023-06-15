@@ -235,6 +235,7 @@ class TestMDCOfferClaim(TestMDCOffer):
             "End Time",
             "Offer UUID",
             "Status",
+            "Purpose",
         ]
 
         self.assertEqual(collist, list(columns))
@@ -247,7 +248,8 @@ class TestMDCOfferClaim(TestMDCOffer):
                         fakes.lease_start_time,
                         fakes.lease_end_time,
                         fakes.offer_uuid,
-                        fakes.lease_status
+                        fakes.lease_status,
+                        fakes.lease_purpose
                         )
         cloud2_lease = ('cloud2', 'regionTwo',
                         fakes.lease_uuid,
@@ -257,7 +259,8 @@ class TestMDCOfferClaim(TestMDCOffer):
                         fakes.lease_start_time,
                         fakes.lease_end_time,
                         fakes.offer_uuid,
-                        fakes.lease_status
+                        fakes.lease_status,
+                        fakes.lease_purpose
                         )
 
         parsed_data = tuple(data)
@@ -305,6 +308,7 @@ class TestMDCOfferClaim(TestMDCOffer):
             "End Time",
             "Offer UUID",
             "Status",
+            "Purpose",
         ]
 
         self.assertEqual(collist, list(columns))
@@ -318,6 +322,7 @@ class TestMDCOfferClaim(TestMDCOffer):
                         fakes.lease_end_time,
                         fakes.offer_uuid,
                         fakes.lease_status,
+                        fakes.lease_purpose,
                         )
 
         parsed_data = tuple(data)

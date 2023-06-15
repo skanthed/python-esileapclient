@@ -63,6 +63,11 @@ class CreateLease(command.ShowOne):
             dest='start_time',
             required=False,
             help="Time when the resource will become usable.")
+        parser.add_argument(
+            '--purpose',
+            dest='purpose',
+            required=False,
+            help="Specify the purpose for leasing the node")
         return parser
 
     def take_action(self, parsed_args):
@@ -147,7 +152,11 @@ class ListLease(command.Lister):
             dest='resource_class',
             required=False,
             help="Show all leases with given resource-class.")
-
+        parser.add_argument(
+            '--purpose',
+            dest='purpose',
+            required=False,
+            help="Show the purpose of leasing the node")
         return parser
 
     def take_action(self, parsed_args):
@@ -166,7 +175,8 @@ class ListLease(command.Lister):
             'view': 'all' if parsed_args.all else None,
             'resource_type': parsed_args.resource_type,
             'resource_uuid': parsed_args.resource_uuid,
-            'resource_class': parsed_args.resource_class
+            'resource_class': parsed_args.resource_class,
+            'purpose': parsed_args.purpose
         }
 
         data = client.lease.list(filters)
