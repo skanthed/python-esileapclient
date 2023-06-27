@@ -16,6 +16,7 @@ import logging
 
 from esileapclient.common import http
 from esileapclient.common.http import DEFAULT_VER
+from esileapclient.v1 import event
 from esileapclient.v1 import lease
 from esileapclient.v1 import node
 from esileapclient.v1 import offer
@@ -41,6 +42,7 @@ class Client(object):
                             "it automatically")
 
         self.http_client = http._construct_http_client(*args, **kwargs)
+        self.event = event.EventManager(self.http_client)
         self.lease = lease.LeaseManager(self.http_client)
         self.node = node.NodeManager(self.http_client)
         self.offer = offer.OfferManager(self.http_client)
