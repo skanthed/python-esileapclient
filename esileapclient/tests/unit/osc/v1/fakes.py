@@ -39,6 +39,10 @@ lease_name = "c1"
 node_name = "fake-node"
 node_uuid = "fake-uuid"
 node_owner = "fake-owner"
+event_id = 7
+event_type = 'fake.event'
+event_time = "3000-07-01T12"
+object_type = 'lease'
 
 OFFER = {
     'availabilities': json.loads(lease_availabilities),
@@ -85,4 +89,16 @@ NODE = {
     'name': node_name,
     'uuid': node_uuid,
     'owner': node_owner
+}
+
+EVENT = {
+    'id': event_id,
+    'event_type': event_type,
+    'event_time': event_time,
+    'object_type': object_type,
+    'object_uuid': lease_uuid,
+    'resource_type': lease_resource_type,
+    'resource_uuid': lease_resource_uuid,
+    'lessee_id': lease_project_id,
+    'owner_id': lease_owner_id,
 }
