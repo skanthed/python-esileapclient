@@ -43,6 +43,8 @@ event_id = 7
 event_type = 'fake.event'
 event_time = "3000-07-01T12"
 object_type = 'lease'
+node_properties = {'cpu': '40', 'traits': ['trait1', 'trait2']}
+formatted_node_properties = "cpu='40', traits='['trait1', 'trait2']'"
 
 OFFER = {
     'availabilities': json.loads(lease_availabilities),
@@ -55,6 +57,7 @@ OFFER = {
     'project_id': lease_project_id,
     'properties': json.loads(lease_properties),
     'resource': lease_resource,
+    'resource_properties': node_properties,
     'resource_type': lease_resource_type,
     'resource_uuid': lease_resource_uuid,
     'resource_class': lease_resource_class,
@@ -76,6 +79,7 @@ LEASE = {
     'owner_id': lease_owner_id,
     'properties': json.loads(lease_properties),
     'resource': lease_resource,
+    'resource_properties': node_properties,
     'resource_type': lease_resource_type,
     'resource_uuid': lease_resource_uuid,
     'resource_class': lease_resource_class,
@@ -88,7 +92,9 @@ LEASE = {
 NODE = {
     'name': node_name,
     'uuid': node_uuid,
-    'owner': node_owner
+    'owner': node_owner,
+    'resource_class': lease_resource_class,
+    'properties': node_properties,
 }
 
 EVENT = {

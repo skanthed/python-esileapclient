@@ -182,14 +182,16 @@ class ListLease(command.Lister):
         data = client.lease.list(filters)
 
         if parsed_args.long:
-            columns = LEASE_RESOURCE.detailed_fields.keys()
-            labels = LEASE_RESOURCE.detailed_fields.values()
+            columns = LEASE_RESOURCE.long_fields.keys()
+            labels = LEASE_RESOURCE.long_fields.values()
         else:
             columns = LEASE_RESOURCE.fields.keys()
             labels = LEASE_RESOURCE.fields.values()
 
         return (labels,
-                (oscutils.get_item_properties(s, columns) for s in data))
+                (oscutils.get_item_properties(s, columns, formatters={
+                    'resource_properties': oscutils.format_dict
+                }) for s in data))
 
 
 class ShowLease(command.ShowOne):
@@ -211,6 +213,9 @@ class ShowLease(command.ShowOne):
         client = self.app.client_manager.lease
 
         lease = client.lease.get(parsed_args.uuid)._info
+        resource_properties = lease['resource_properties']
+        lease['resource_properties'] = oscutils.format_dict(
+            resource_properties)
 
         return zip(*sorted(lease.items()))
 
