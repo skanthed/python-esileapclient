@@ -40,6 +40,7 @@ class TestNodeList(TestNode):
             "Name",
             "Owner",
             "Lessee",
+            "Resource Class",
             "Provision State",
             "Maintenance",
             "Offer UUID",
@@ -50,7 +51,8 @@ class TestNodeList(TestNode):
 
         datalist = ((fakes.node_name,
                      fakes.node_owner,
-                     '', '', '', '', ''
+                     '', fakes.lease_resource_class,
+                     '', '', '', ''
                      ),)
         self.assertEqual(datalist, tuple(data))
 
@@ -78,12 +80,30 @@ class TestNodeList(TestNode):
             "Future Offers",
             "Future Leases"
         ]
+        long_collist = [
+            'UUID',
+            'Name',
+            'Owner',
+            'Lessee',
+            'Resource Class',
+            'Provision State',
+            'Maintenance',
+            'Properties',
+            'Offer UUID',
+            'Lease UUID',
+            'Future Offers',
+            'Future Leases'
+        ]
 
         self.assertEqual(long_collist, list(columns))
 
         datalist = ((fakes.node_uuid,
                      fakes.node_name,
                      fakes.node_owner,
-                     '', '', '', '', '', '', ''
+                     '',
+                     fakes.lease_resource_class,
+                     '', '',
+                     fakes.formatted_node_properties,
+                     '', '', '', ''
                      ),)
         self.assertEqual(datalist, tuple(data))

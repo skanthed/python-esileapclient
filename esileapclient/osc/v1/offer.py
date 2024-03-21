@@ -177,14 +177,16 @@ class ListOffer(command.Lister):
         data = client.offer.list(filters)
 
         if parsed_args.long:
-            columns = OFFER_RESOURCE.detailed_fields.keys()
-            labels = OFFER_RESOURCE.detailed_fields.values()
+            columns = OFFER_RESOURCE.long_fields.keys()
+            labels = OFFER_RESOURCE.long_fields.values()
         else:
             columns = OFFER_RESOURCE.fields.keys()
             labels = OFFER_RESOURCE.fields.values()
 
         return (labels,
-                (oscutils.get_item_properties(s, columns) for s in data))
+                (oscutils.get_item_properties(s, columns, formatters={
+                    'resource_properties': oscutils.format_dict
+                }) for s in data))
 
 
 class ShowOffer(command.ShowOne):
@@ -206,6 +208,9 @@ class ShowOffer(command.ShowOne):
         client = self.app.client_manager.lease
 
         offer = client.offer.get(parsed_args.uuid)._info
+        resource_properties = offer['resource_properties']
+        offer['resource_properties'] = oscutils.format_dict(
+            resource_properties)
 
         return zip(*sorted(offer.items()))
 

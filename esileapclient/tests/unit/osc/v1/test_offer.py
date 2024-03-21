@@ -163,42 +163,32 @@ class TestOfferList(TestOffer):
         self.client_mock.offer.list.assert_called_with(filters)
 
         long_collist = [
-            "Availabilities",
-            "End Time",
-            "Lessee",
-            "Lessee ID",
-            "Name",
-            "Parent Lease UUID",
-            "Project",
-            "Project ID",
-            "Properties",
-            "Resource",
-            "Resource Class",
-            "Resource Type",
-            "Resource UUID",
-            "Start Time",
-            "Status",
-            "UUID"
+            'UUID',
+            'Resource',
+            'Resource Class',
+            'Resource Properties',
+            'Lessee',
+            'Start Time',
+            'End Time',
+            'Status',
+            'Availabilities',
+            'Project',
+            'Parent Lease UUID'
         ]
 
         self.assertEqual(long_collist, list(columns))
 
-        datalist = ((json.loads(fakes.lease_availabilities),
-                     fakes.lease_end_time,
-                     fakes.offer_lessee,
-                     fakes.offer_lessee_id,
-                     fakes.offer_name,
-                     fakes.parent_lease_uuid,
-                     fakes.lease_project,
-                     fakes.lease_project_id,
-                     json.loads(fakes.lease_properties),
+        datalist = ((fakes.offer_uuid,
                      fakes.lease_resource,
                      fakes.lease_resource_class,
-                     fakes.lease_resource_type,
-                     fakes.lease_resource_uuid,
+                     fakes.formatted_node_properties,
+                     fakes.offer_lessee,
                      fakes.lease_start_time,
+                     fakes.lease_end_time,
                      fakes.lease_status,
-                     fakes.offer_uuid
+                     json.loads(fakes.lease_availabilities),
+                     fakes.lease_project,
+                     fakes.parent_lease_uuid
                      ),)
         self.assertEqual(datalist, tuple(data))
 
@@ -234,6 +224,7 @@ class TestOfferShow(TestOffer):
             "properties",
             "resource",
             "resource_class",
+            "resource_properties",
             "resource_type",
             "resource_uuid",
             "start_time",
@@ -254,6 +245,7 @@ class TestOfferShow(TestOffer):
                     json.loads(fakes.lease_properties),
                     fakes.lease_resource,
                     fakes.lease_resource_class,
+                    fakes.formatted_node_properties,
                     fakes.lease_resource_type,
                     fakes.lease_resource_uuid,
                     fakes.lease_start_time,

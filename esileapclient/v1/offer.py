@@ -34,11 +34,26 @@ class Offer(base.Resource):
         'properties': "Properties",
         'resource': "Resource",
         'resource_class': "Resource Class",
+        'resource_properties': "Resource Properties",
         'resource_type': "Resource Type",
         'resource_uuid': "Resource UUID",
         'start_time': "Start Time",
         'status': "Status",
         'uuid': "UUID",
+    }
+
+    long_fields = {
+        'uuid': "UUID",
+        'resource': "Resource",
+        'resource_class': "Resource Class",
+        'resource_properties': "Resource Properties",
+        'lessee': "Lessee",
+        'start_time': "Start Time",
+        'end_time': "End Time",
+        'status': "Status",
+        'availabilities': "Availabilities",
+        'project': "Project",
+        'parent_lease_uuid': "Parent Lease UUID",
     }
 
     fields = {
