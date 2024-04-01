@@ -88,6 +88,40 @@ class CreateLease(command.ShowOne):
         return self.dict2columns(data)
 
 
+class UpdateLease(command.ShowOne):
+    """Update a lease."""
+
+    log = logging.getLogger(__name__ + ".UpdateLease")
+
+    def get_parser(self, prog_name):
+        parser = super(UpdateLease, self).get_parser(prog_name)
+
+        parser.add_argument(
+            "uuid",
+            metavar="<uuid>",
+            help="UUID of the lease")
+        parser.add_argument(
+            '--end-time',
+            dest='end_time',
+            required=False,
+            help="Time when the lease will expire.")
+        return parser
+
+    def take_action(self, parsed_args):
+        client = self.app.client_manager.lease
+
+        field_list = LEASE_RESOURCE._update_attributes
+        fields = dict((k, v) for (k, v) in vars(parsed_args).items()
+                      if k in field_list and v is not None)
+
+        lease = client.lease.update(parsed_args.uuid, **fields)
+
+        data = dict([(f, getattr(lease, f, '')) for f in
+                    LEASE_RESOURCE.fields])
+
+        return self.dict2columns(data)
+
+
 class ListLease(command.Lister):
     """List leases."""
 
