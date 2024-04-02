@@ -82,6 +82,44 @@ class TestCreateLease(TestLease):
         self.client_mock.lease.create.assert_called_once_with(**args)
 
 
+class TestUpdateLease(TestLease):
+
+    def setUp(self):
+        super(TestUpdateLease, self).setUp()
+
+        self.client_mock.lease.update.return_value = (
+            base.FakeResource(copy.deepcopy(fakes.LEASE))
+        )
+
+        # Get the command object to test
+        self.cmd = lease.UpdateLease(self.app, None)
+
+    def test_lease_update(self):
+
+        arglist = [
+            fakes.lease_uuid,
+            '--end-time', fakes.lease_end_time,
+        ]
+
+        verifylist = [
+            ('uuid', fakes.lease_uuid),
+        ]
+
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+
+        self.cmd.take_action(parsed_args)
+
+        self.client_mock.lease.update.assert_called_once_with(
+            fakes.lease_uuid, end_time=fakes.lease_end_time)
+
+    def test_update_show_no_id(self):
+        arglist = []
+        verifylist = []
+        self.assertRaises(osctestutils.ParserException,
+                          self.check_parser,
+                          self.cmd, arglist, verifylist)
+
+
 class TestLeaseList(TestLease):
 
     def setUp(self):

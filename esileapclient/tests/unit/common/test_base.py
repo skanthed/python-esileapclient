@@ -32,6 +32,14 @@ FAKE_RESOURCE_2 = {
 CREATE_FAKE_RESOURCE = copy.deepcopy(FAKE_RESOURCE)
 del CREATE_FAKE_RESOURCE['uuid']
 
+UPDATE_FAKE_RESOURCE = {
+    'attribute1': '5',
+}
+
+INVALID_UPDATE_FAKE_RESOURCE = {
+    'attribute2': '6',
+}
+
 INVALID_ATTRIBUTE_FAKE_RESOURCE = {
     'non-existent-attribute': 'bad',
     'attribute1': '1',
@@ -73,6 +81,7 @@ class FakeResource(base.Resource):
     }
 
     _creation_attributes = ['attribute1', 'attribute2']
+    _update_attributes = ['attribute1']
 
     def __repr__(self):
         return "<FakeResource %s>" % self._info
@@ -132,6 +141,34 @@ class ManagerTestCase(testtools.TestCase):
                 Exception,
                 manager._create,
                 **INVALID_ATTRIBUTE_FAKE_RESOURCE)
+
+    def test__update(self):
+        manager = FakeResourceManager(None)
+        with mock.patch.object(manager, 'api') as mock_api:
+
+            mock_api.json_request.return_value = (
+                VALID_RESPONSE,
+                FAKE_RESOURCE)
+
+            resource = manager._update(FAKE_RESOURCE['uuid'],
+                                       **UPDATE_FAKE_RESOURCE)
+
+            mock_api.json_request.assert_called_once_with(
+                'PATCH', '/v1/fakeresources/%s' % FAKE_RESOURCE['uuid'],
+                **{'body': UPDATE_FAKE_RESOURCE})
+
+            self.assertIsInstance(resource, FakeResource)
+            self.assertEqual(resource._info, FAKE_RESOURCE)
+
+    def test__update_with_invalid_attribute(self):
+        manager = FakeResourceManager(None)
+        with mock.patch.object(manager, 'api'):
+
+            self.assertRaises(
+                Exception,
+                manager._update,
+                FAKE_RESOURCE['uuid'],
+                **INVALID_UPDATE_FAKE_RESOURCE)
 
     def test__list(self):
 

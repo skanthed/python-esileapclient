@@ -96,6 +96,39 @@ class Manager(object):
         else:
             raise exceptions.CommandError(json.loads(resp.text)['faultstring'])
 
+    def _update(self, resource_id, os_esileap_api_version=None, **kwargs):
+        """Update a resource based on a kwargs dictionary of attributes.
+        :param kwargs: A dictionary containing the attributes of the resource
+                       that will be updated.
+        """
+
+        new = {}
+        invalid = []
+        for (key, value) in kwargs.items():
+            if key in self.resource_class._update_attributes:
+                new[key] = value
+            else:
+                invalid.append(key)
+        if invalid:
+            raise Exception('The attribute(s) "%(attrs)s" '
+                            'are invalid; they are not '
+                            'needed to update %(resource)s.' %
+                            {'resource': self._resource_name,
+                             'attrs': '","'.join(invalid)})
+
+        headers = {}
+        if os_esileap_api_version is not None:
+            headers['headers'] = {'X-OpenStack-ESI-Leap-API-Version':
+                                  os_esileap_api_version}
+
+        url = self._path(resource_id)
+        resp, body = self.api.json_request('PATCH', url, body=new, **headers)
+
+        if resp.status_code == 200:
+            return self.resource_class(self, body)
+        else:
+            raise exceptions.CommandError(json.loads(resp.text)['faultstring'])
+
     def _list(self, url, obj_class=None, os_esileap_api_version=None):
         if obj_class is None:
             obj_class = self.resource_class

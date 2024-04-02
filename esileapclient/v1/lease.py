@@ -75,6 +75,7 @@ class Lease(base.Resource):
     _creation_attributes = ['start_time', 'end_time', 'status', 'name',
                             'properties', 'project_id', 'resource_type',
                             'resource_uuid', 'purpose']
+    _update_attributes = ['end_time']
 
     def __repr__(self):
         return "<Lease %s>" % self._info
@@ -91,6 +92,18 @@ class LeaseManager(base.Manager):
 
         lease = self._create(os_esileap_api_version=os_esileap_api_version,
                              **kwargs)
+
+        return lease
+
+    def update(self, lease_uuid, os_esileap_api_version=None, **kwargs):
+        """Update a lease based on a kwargs dictionary of attributes.
+        :returns: a :class: `Lease` object
+        """
+
+        lease = self._update(
+            lease_uuid,
+            os_esileap_api_version=os_esileap_api_version,
+            **kwargs)
 
         return lease
 
