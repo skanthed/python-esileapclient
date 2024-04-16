@@ -53,23 +53,3 @@ class Node(base.Resource):
 
     def __repr__(self):
         return "<Node %s>" % self._info
-
-
-class NodeManager(base.Manager):
-    resource_class = Node
-    _resource_name = 'nodes'
-
-    def list(self, filters, os_esileap_api_version=None):
-        """Retrieve a list of nodes.
-        :returns: A list of nodes.
-        """
-
-        resource_id = ""
-
-        url_variables = NodeManager._url_variables(filters)
-        url = self._path(resource_id) + url_variables
-
-        nodes = self._list(url, os_esileap_api_version=os_esileap_api_version)
-
-        if type(nodes) is list:
-            return nodes

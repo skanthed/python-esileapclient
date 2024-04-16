@@ -14,7 +14,8 @@ import unittest.mock as mock
 import testtools
 
 from esileapclient.osc import plugin
-from esileapclient.v1 import client
+
+from esi import connection
 
 API_VERSION = '1'
 
@@ -27,38 +28,34 @@ class FakeClientManager(object):
         self._region_name = 'RegionOne'
         self.session = 'fake session'
         self._api_version = {'lease': API_VERSION}
+        self._cli_options = None
 
 
 class MakeClientTest(testtools.TestCase):
 
-    @mock.patch.object(client, 'Client')
-    def test_make_client_explicit_version(self, mock_client):
+    @mock.patch.object(connection, 'ESIConnection')
+    def test_make_client_explicit_version(self, mock_conn):
         instance = FakeClientManager()
-        plugin.make_client(instance)
-        mock_client.assert_called_once_with(
-            os_esileap_api_version=API_VERSION,
-            session=instance.session,
-            region_name=instance._region_name,
-            endpoint_override=None)
+        mock_conn.return_value.lease = mock.Mock()
+        instance._api_version = {'lease': API_VERSION}
+        lease = plugin.make_client(instance)
+        mock_conn.assert_called_once_with(config=None)
+        self.assertEqual(lease, mock_conn.return_value.lease)
 
-    @mock.patch.object(client, 'Client')
-    def test_make_client_latest(self, mock_client):
+    @mock.patch.object(connection, 'ESIConnection')
+    def test_make_client_latest(self, mock_conn):
         instance = FakeClientManager()
+        mock_conn.return_value.lease = mock.Mock()
         instance._api_version = {'lease': plugin.LATEST_VERSION}
-        plugin.make_client(instance)
-        mock_client.assert_called_once_with(
-            os_esileap_api_version=plugin.LATEST_VERSION,
-            session=instance.session,
-            region_name=instance._region_name,
-            endpoint_override=None)
+        lease = plugin.make_client(instance)
+        mock_conn.assert_called_once_with(config=None)
+        self.assertEqual(lease, mock_conn.return_value.lease)
 
-    @mock.patch.object(client, 'Client')
-    def test_make_client_v1(self, mock_client):
+    @mock.patch.object(connection, 'ESIConnection')
+    def test_make_client_v1(self, mock_conn):
         instance = FakeClientManager()
+        mock_conn.return_value.lease = mock.Mock()
         instance._api_version = {'lease': '1'}
-        plugin.make_client(instance)
-        mock_client.assert_called_once_with(
-            os_esileap_api_version=plugin.LATEST_VERSION,
-            session=instance.session,
-            region_name=instance._region_name,
-            endpoint_override=None)
+        lease = plugin.make_client(instance)
+        mock_conn.assert_called_once_with(config=None)
+        self.assertEqual(lease, mock_conn.return_value.lease)

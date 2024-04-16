@@ -1,3 +1,15 @@
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+
 import copy
 
 from esileapclient.osc.v1 import event
@@ -19,7 +31,7 @@ class TestEventList(TestEvent):
     def setUp(self):
         super(TestEventList, self).setUp()
 
-        self.client_mock.event.list.return_value = [
+        self.client_mock.events.return_value = [
             base.FakeResource(copy.deepcopy(fakes.EVENT))
         ]
         self.cmd = event.ListEvent(self.app, None)
@@ -40,7 +52,7 @@ class TestEventList(TestEvent):
             'resource_uuid': parsed_args.resource_uuid,
         }
 
-        self.client_mock.event.list.assert_called_with(filters)
+        self.client_mock.events.assert_called_with(**filters)
 
         collist = [
             "ID",

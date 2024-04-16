@@ -1,3 +1,15 @@
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+
 import copy
 
 from esileapclient.osc.v1 import node
@@ -19,7 +31,7 @@ class TestNodeList(TestNode):
     def setUp(self):
         super(TestNodeList, self).setUp()
 
-        self.client_mock.node.list.return_value = [
+        self.client_mock.nodes.return_value = [
             base.FakeResource(copy.deepcopy(fakes.NODE))
         ]
         self.cmd = node.ListNode(self.app, None)
@@ -34,7 +46,7 @@ class TestNodeList(TestNode):
         filters = {
         }
 
-        self.client_mock.node.list.assert_called_with(filters)
+        self.client_mock.nodes.assert_called_with(**filters)
 
         collist = [
             "Name",
@@ -66,7 +78,7 @@ class TestNodeList(TestNode):
         filters = {
         }
 
-        self.client_mock.node.list.assert_called_with(filters)
+        self.client_mock.nodes.assert_called_with(**filters)
 
         long_collist = [
             "UUID",

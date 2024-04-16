@@ -80,7 +80,7 @@ class CreateLease(command.ShowOne):
         if 'properties' in fields:
             fields['properties'] = json.loads(fields['properties'])
 
-        lease = client.lease.create(**fields)
+        lease = client.create_lease(**fields)
 
         data = dict([(f, getattr(lease, f, '')) for f in
                     LEASE_RESOURCE.fields])
@@ -114,11 +114,9 @@ class UpdateLease(command.ShowOne):
         fields = dict((k, v) for (k, v) in vars(parsed_args).items()
                       if k in field_list and v is not None)
 
-        lease = client.lease.update(parsed_args.uuid, **fields)
-
-        data = dict([(f, getattr(lease, f, '')) for f in
+        lease = client.update_lease(parsed_args.uuid, **fields)
+        data = dict([(f, lease.get(f, '')) for f in
                     LEASE_RESOURCE.fields])
-
         return self.dict2columns(data)
 
 
@@ -213,7 +211,7 @@ class ListLease(command.Lister):
             'purpose': parsed_args.purpose
         }
 
-        data = client.lease.list(filters)
+        data = list(client.leases(**filters))
 
         if parsed_args.long:
             columns = LEASE_RESOURCE.long_fields.keys()
@@ -245,13 +243,15 @@ class ShowLease(command.ShowOne):
     def take_action(self, parsed_args):
 
         client = self.app.client_manager.lease
+        lease = client.get_lease(parsed_args.uuid)
 
-        lease = client.lease.get(parsed_args.uuid)._info
-        resource_properties = lease['resource_properties']
-        lease['resource_properties'] = oscutils.format_dict(
+        lease_info = {k: getattr(lease, k, '') for k in
+                      LEASE_RESOURCE.detailed_fields}
+        resource_properties = lease_info['resource_properties']
+        lease_info['resource_properties'] = oscutils.format_dict(
             resource_properties)
 
-        return zip(*sorted(lease.items()))
+        return zip(*sorted(lease_info.items()))
 
 
 class DeleteLease(command.Command):
@@ -271,5 +271,5 @@ class DeleteLease(command.Command):
     def take_action(self, parsed_args):
 
         client = self.app.client_manager.lease
-        client.lease.delete(parsed_args.uuid)
+        client.delete_lease(parsed_args.uuid)
         print('Deleted lease %s' % parsed_args.uuid)

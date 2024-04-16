@@ -44,7 +44,7 @@ class ListNode(command.Lister):
         filters = {
         }
 
-        data = client.node.list(filters)
+        data = list(client.nodes(**filters))
 
         if parsed_args.long:
             columns = NODE_RESOURCE.detailed_fields.keys()

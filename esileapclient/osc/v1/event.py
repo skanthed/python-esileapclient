@@ -73,9 +73,8 @@ class ListEvent(command.Lister):
             'resource_uuid': parsed_args.resource_uuid,
         }
 
-        data = client.event.list(filters)
+        data = list(client.events(**filters))
         columns = EVENT_RESOURCE.fields.keys()
         labels = EVENT_RESOURCE.fields.values()
-
         return (labels,
                 (oscutils.get_item_properties(s, columns) for s in data))

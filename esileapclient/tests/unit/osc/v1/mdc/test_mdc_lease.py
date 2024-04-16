@@ -13,6 +13,8 @@
 import copy
 import mock
 
+from esi import connection
+
 from esileapclient.osc.v1.mdc import mdc_lease
 from esileapclient.tests.unit.osc.v1 import base
 from esileapclient.tests.unit.osc.v1 import fakes
@@ -45,13 +47,13 @@ class TestMDCLeaseList(TestMDCLease):
         self.lease2 = base.FakeResource(copy.deepcopy(fakes.LEASE))
         self.cmd = mdc_lease.MDCListLease(self.app, None)
 
-    @mock.patch('esileapclient.v1.client.Client')
     @mock.patch('openstack.config.loader.OpenStackConfig.get_all_clouds')
-    def test_mdc_lease_list(self, mock_clouds, mock_client):
+    @mock.patch.object(connection, 'ESIConnection')
+    def test_mdc_lease_list(self, mock_conn, mock_clouds):
         mock_clouds.return_value = [self.cloud1, self.cloud2]
-        mock_client.return_value = self.client_mock
-        self.client_mock.lease.list.side_effect = [[self.lease1],
-                                                   [self.lease2]]
+        mock_conn.return_value.lease = self.client_mock
+        self.client_mock.leases.side_effect = [[self.lease1],
+                                               [self.lease2]]
 
         arglist = []
         verifylist = []
@@ -69,8 +71,7 @@ class TestMDCLeaseList(TestMDCLease):
             'resource_class': parsed_args.resource_class,
             'purpose': parsed_args.purpose,
         }
-
-        self.client_mock.lease.list.assert_called_with(filters)
+        self.client_mock.leases.assert_called_with(**filters)
 
         collist = [
             "Cloud",
@@ -112,12 +113,12 @@ class TestMDCLeaseList(TestMDCLease):
                      ))
         self.assertEqual(datalist, tuple(data))
 
-    @mock.patch('esileapclient.v1.client.Client')
     @mock.patch('openstack.config.loader.OpenStackConfig.get_all_clouds')
-    def test_mdc_lease_list_filter(self, mock_clouds, mock_client):
+    @mock.patch.object(connection, 'ESIConnection')
+    def test_mdc_lease_list_filter(self, mock_conn, mock_clouds):
         mock_clouds.return_value = [self.cloud1, self.cloud2]
-        mock_client.return_value = self.client_mock
-        self.client_mock.lease.list.return_value = [self.lease2]
+        mock_conn.return_value.lease = self.client_mock
+        self.client_mock.leases.return_value = [self.lease2]
 
         arglist = ['--clouds', 'cloud2']
         verifylist = []
@@ -136,7 +137,7 @@ class TestMDCLeaseList(TestMDCLease):
             'purpose': parsed_args.purpose,
         }
 
-        self.client_mock.lease.list.assert_called_with(filters)
+        self.client_mock.leases.assert_called_with(**filters)
 
         collist = [
             "Cloud",

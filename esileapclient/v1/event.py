@@ -50,24 +50,3 @@ class Event(base.Resource):
 
     def __repr__(self):
         return "<Event %s>" % self._info
-
-
-class EventManager(base.Manager):
-    resource_class = Event
-    _resource_name = 'events'
-
-    def list(self, filters, os_esileap_api_version=None):
-        """Retrieve a list of events.
-        :returns: A list of events.
-        """
-
-        resource_id = ''
-
-        url_variables = EventManager._url_variables(filters)
-        url = self._path(resource_id) + url_variables
-
-        events = self._list(url,
-                            os_esileap_api_version=os_esileap_api_version)
-
-        if type(events) is list:
-            return events

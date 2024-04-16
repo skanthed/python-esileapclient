@@ -10,18 +10,18 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from esi import connection
 import logging
-
-from osc_lib import utils
+from openstackclient.i18n import _
 
 
 DEFAULT_API_VERSION = '1'
 
 # Required by the OSC plugin interface
 API_NAME = 'lease'
-API_VERSION_OPTION = 'os_lease_api_version'
+API_VERSION_OPTION = 'os_esileap_api_version'
 API_VERSIONS = {
-    '1': 'esileapclient.v1.client.Client',
+    '1': 'esi.connection.ESIConnection',
 }
 
 OS_LEASE_API_LATEST = True
@@ -40,22 +40,7 @@ def make_client(instance):
 
     :param ClientManager instance: The ClientManager that owns the new client
     """
-
-    requested_api_version = instance._api_version[API_NAME]
-
-    plugin_client = utils.get_client_class(
-        API_NAME,
-        requested_api_version,
-        API_VERSIONS)
-
-    client = plugin_client(
-        os_esileap_api_version=requested_api_version,
-        session=instance.session,
-        region_name=instance._region_name,
-        endpoint_override=None
-        )
-
-    return client
+    return connection.ESIConnection(config=instance._cli_options).lease
 
 
 def build_option_parser(parser):
@@ -69,4 +54,12 @@ def build_option_parser(parser):
     :param argparse.ArgumentParser parser: The parser object that has been
         initialized by OpenStackShell.
     """
+    parser.add_argument(
+        '--os-esileap-api-version',
+        metavar='<os_esileap_api_version>',
+        default=DEFAULT_API_VERSION,
+        help=_('ESI-LEAP API version, default=%s')
+        % DEFAULT_API_VERSION,
+    )
+
     return parser

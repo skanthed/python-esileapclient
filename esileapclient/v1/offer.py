@@ -10,10 +10,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import json
 import logging
-
-from osc_lib import exceptions
 
 from esileapclient.common import base
 
@@ -74,66 +71,3 @@ class Offer(base.Resource):
 
     def __repr__(self):
         return "<Offer %s>" % self._info
-
-
-class OfferManager(base.Manager):
-    resource_class = Offer
-    _resource_name = 'offers'
-
-    def create(self, os_esileap_api_version=None, **kwargs):
-        """Create an offer based on a kwargs dictionary of attributes.
-        :returns: a :class: `Offer` object
-        """
-
-        offer = self._create(os_esileap_api_version=os_esileap_api_version,
-                             **kwargs)
-
-        return offer
-
-    def list(self, filters, os_esileap_api_version=None):
-        """Retrieve a list of offers.
-        :returns: A list of offers.
-        """
-
-        resource_id = ''
-
-        url_variables = OfferManager._url_variables(filters)
-        url = self._path(resource_id) + url_variables
-
-        offers = self._list(url,
-                            os_esileap_api_version=os_esileap_api_version)
-
-        if type(offers) is list:
-            return offers
-
-    def get(self, offer_uuid):
-        """Get an offer with the specified identifier.
-        :param offer_uuid: The uuid of an offer.
-        :returns: a :class:`Offer` object.
-        """
-
-        offer = self._get(offer_uuid)
-
-        return offer
-
-    def delete(self, offer_uuid):
-        """Delete an offer with the specified identifier.
-        :param offer_uuid: The uuid of an offer.
-        :returns: a :class:`Offer` object.
-        """
-
-        self._delete(resource_id=offer_uuid)
-
-    def claim(self, offer_uuid, **kwargs):
-        """Claim an offer with the specified identifier.
-        :param offer_uuid: The uuid of an offer.
-        :returns: a :class:`Offer` object.
-        """
-        url = self._path(offer_uuid) + "/claim"
-
-        resp, body = self.api.json_request('POST', url, body=kwargs)
-
-        if resp.status_code == 201:
-            return self.resource_class(self, body)
-        else:
-            raise exceptions.CommandError(json.loads(resp.text)['faultstring'])

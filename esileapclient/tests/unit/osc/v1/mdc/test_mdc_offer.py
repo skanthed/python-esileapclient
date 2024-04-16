@@ -14,6 +14,8 @@ import copy
 import json
 import mock
 
+from esi import connection
+
 from osc_lib import exceptions
 
 from esileapclient.osc.v1.mdc import mdc_offer
@@ -48,13 +50,13 @@ class TestMDCOfferList(TestMDCOffer):
         self.offer2 = base.FakeResource(copy.deepcopy(fakes.OFFER))
         self.cmd = mdc_offer.MDCListOffer(self.app, None)
 
-    @mock.patch('esileapclient.v1.client.Client')
     @mock.patch('openstack.config.loader.OpenStackConfig.get_all_clouds')
-    def test_mdc_offer_list(self, mock_clouds, mock_client):
+    @mock.patch.object(connection, 'ESIConnection')
+    def test_mdc_offer_list(self, mock_conn, mock_clouds):
         mock_clouds.return_value = [self.cloud1, self.cloud2]
-        mock_client.return_value = self.client_mock
-        self.client_mock.offer.list.side_effect = [[self.offer1],
-                                                   [self.offer2]]
+        mock_conn.return_value.lease = self.client_mock
+        self.client_mock.offers.side_effect = [[self.offer1],
+                                               [self.offer2]]
 
         arglist = []
         verifylist = []
@@ -76,7 +78,7 @@ class TestMDCOfferList(TestMDCOffer):
             'resource_class': parsed_args.resource_class,
         }
 
-        self.client_mock.offer.list.assert_called_with(filters)
+        self.client_mock.offers.assert_called_with(**filters)
 
         collist = [
             "Cloud",
@@ -115,12 +117,12 @@ class TestMDCOfferList(TestMDCOffer):
                      ))
         self.assertEqual(datalist, tuple(data))
 
-    @mock.patch('esileapclient.v1.client.Client')
     @mock.patch('openstack.config.loader.OpenStackConfig.get_all_clouds')
-    def test_mdc_offer_list_filter(self, mock_clouds, mock_client):
+    @mock.patch.object(connection, 'ESIConnection')
+    def test_mdc_offer_list_filter(self, mock_conn, mock_clouds):
         mock_clouds.return_value = [self.cloud1, self.cloud2]
-        mock_client.return_value = self.client_mock
-        self.client_mock.offer.list.return_value = [self.offer2]
+        mock_conn.return_value.lease = self.client_mock
+        self.client_mock.offers.return_value = [self.offer2]
 
         arglist = ['--clouds', 'cloud2']
         verifylist = []
@@ -142,7 +144,7 @@ class TestMDCOfferList(TestMDCOffer):
             'resource_class': parsed_args.resource_class,
         }
 
-        self.client_mock.offer.list.assert_called_with(filters)
+        self.client_mock.offers.assert_called_with(**filters)
 
         collist = [
             "Cloud",
@@ -194,14 +196,14 @@ class TestMDCOfferClaim(TestMDCOffer):
         self.lease3 = base.FakeResource(copy.deepcopy(fakes.LEASE))
         self.cmd = mdc_offer.MDCClaimOffer(self.app, None)
 
-    @mock.patch('esileapclient.v1.client.Client')
     @mock.patch('openstack.config.loader.OpenStackConfig.get_all_clouds')
-    def test_mdc_offer_claim(self, mock_clouds, mock_client):
+    @mock.patch.object(connection, 'ESIConnection')
+    def test_mdc_offer_claim(self, mock_conn, mock_clouds):
         mock_clouds.return_value = [self.cloud1, self.cloud2]
-        mock_client.return_value = self.client_mock
-        self.client_mock.offer.list.side_effect = [[self.offer1, self.offer2],
-                                                   [self.offer3]]
-        self.client_mock.offer.claim.side_effect = [self.lease1, self.lease2,
+        mock_conn.return_value.lease = self.client_mock
+        self.client_mock.offers.side_effect = [[self.offer1, self.offer2],
+                                               [self.offer3]]
+        self.client_mock.claim_offer.side_effect = [self.lease1, self.lease2,
                                                     self.lease3]
 
         arglist = ['3', fakes.lease_start_time, fakes.lease_end_time]
@@ -218,8 +220,9 @@ class TestMDCOfferClaim(TestMDCOffer):
             'resource_class': parsed_args.resource_class,
         }
 
-        self.client_mock.offer.list.assert_called_with(list_filters)
-        self.client_mock.offer.claim.assert_called_with(
+        self.client_mock.offers.assert_called_with(**list_filters)
+
+        self.client_mock.claim_offer.assert_called_with(
             fakes.offer_uuid,
             start_time=str(parsed_args.start_time),
             end_time=str(parsed_args.end_time))
@@ -268,13 +271,13 @@ class TestMDCOfferClaim(TestMDCOffer):
         self.assertEqual(2, parsed_data.count(cloud1_lease))
         self.assertEqual(1, parsed_data.count(cloud2_lease))
 
-    @mock.patch('esileapclient.v1.client.Client')
     @mock.patch('openstack.config.loader.OpenStackConfig.get_all_clouds')
-    def test_mdc_offer_claim_filter(self, mock_clouds, mock_client):
+    @mock.patch.object(connection, 'ESIConnection')
+    def test_mdc_offer_claim_filter(self, mock_conn, mock_clouds):
         mock_clouds.return_value = [self.cloud1, self.cloud2]
-        mock_client.return_value = self.client_mock
-        self.client_mock.offer.list.return_value = [self.offer1, self.offer2]
-        self.client_mock.offer.claim.side_effect = [self.lease1, self.lease2]
+        mock_conn.return_value.lease = self.client_mock
+        self.client_mock.offers.return_value = [self.offer1, self.offer2]
+        self.client_mock.claim_offer.side_effect = [self.lease1, self.lease2]
 
         arglist = ['2', fakes.lease_start_time, fakes.lease_end_time,
                    '--clouds', 'cloud1']
@@ -291,8 +294,8 @@ class TestMDCOfferClaim(TestMDCOffer):
             'resource_class': parsed_args.resource_class,
         }
 
-        self.client_mock.offer.list.assert_called_with(list_filters)
-        self.client_mock.offer.claim.assert_called_with(
+        self.client_mock.offers.assert_called_with(**list_filters)
+        self.client_mock.claim_offer.assert_called_with(
             fakes.offer_uuid,
             start_time=str(parsed_args.start_time),
             end_time=str(parsed_args.end_time))
@@ -329,13 +332,13 @@ class TestMDCOfferClaim(TestMDCOffer):
         self.assertEqual(2, len(parsed_data))
         self.assertEqual(2, parsed_data.count(cloud1_lease))
 
-    @mock.patch('esileapclient.v1.client.Client')
     @mock.patch('openstack.config.loader.OpenStackConfig.get_all_clouds')
-    def test_mdc_offer_claim_not_enough_offers(self, mock_clouds, mock_client):
+    @mock.patch.object(connection, 'ESIConnection')
+    def test_mdc_offer_claim_not_enough_offers(self, mock_conn, mock_clouds):
         mock_clouds.return_value = [self.cloud1, self.cloud2]
-        mock_client.return_value = self.client_mock
-        self.client_mock.offer.list.side_effect = [[self.offer1, self.offer2],
-                                                   [self.offer3]]
+        mock_conn.return_value.lease = self.client_mock
+        self.client_mock.offers.side_effect = [[self.offer1, self.offer2],
+                                               [self.offer3]]
 
         arglist = ['4', fakes.lease_start_time, fakes.lease_end_time]
         verifylist = []
@@ -352,4 +355,4 @@ class TestMDCOfferClaim(TestMDCOffer):
             'resource_class': parsed_args.resource_class,
         }
 
-        self.client_mock.offer.list.assert_called_with(list_filters)
+        self.client_mock.offers.assert_called_with(**list_filters)
