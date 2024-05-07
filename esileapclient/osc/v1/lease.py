@@ -222,6 +222,12 @@ class ListLease(command.Lister):
             columns = LEASE_RESOURCE.fields.keys()
             labels = LEASE_RESOURCE.fields.values()
 
+        if 'Properties' in labels:
+            for node in data:
+                if hasattr(node, 'properties') \
+                    and isinstance(node.properties, dict):
+                    node.properties.pop('traits', None)
+
         return (labels,
                 (oscutils.get_item_properties(s, columns, formatters={
                     'resource_properties': oscutils.format_dict

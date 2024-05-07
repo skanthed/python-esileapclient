@@ -53,6 +53,12 @@ class ListNode(command.Lister):
             columns = NODE_RESOURCE.fields.keys()
             labels = NODE_RESOURCE.fields.values()
 
+        if 'Properties' in labels:
+            for node in data:
+                if hasattr(node, 'properties') \
+                    and isinstance(node.properties, dict):
+                    node.properties.pop('traits', None)
+
         return (labels,
                 (oscutils.get_item_properties(s, columns, formatters={
                     'properties': oscutils.format_dict
