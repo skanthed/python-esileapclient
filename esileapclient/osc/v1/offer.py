@@ -81,7 +81,7 @@ class CreateOffer(command.ShowOne):
         if 'properties' in fields:
             fields['properties'] = json.loads(fields['properties'])
 
-        offer = client.offer.create(**fields)
+        offer = client.create_offer(**fields)
 
         data = dict([(f, getattr(offer, f, '')) for f in
                     OFFER_RESOURCE.fields])
@@ -174,7 +174,7 @@ class ListOffer(command.Lister):
             'resource_class': parsed_args.resource_class
         }
 
-        data = client.offer.list(filters)
+        data = list(client.offers(**filters))
 
         if parsed_args.long:
             columns = OFFER_RESOURCE.long_fields.keys()
@@ -207,12 +207,15 @@ class ShowOffer(command.ShowOne):
 
         client = self.app.client_manager.lease
 
-        offer = client.offer.get(parsed_args.uuid)._info
-        resource_properties = offer['resource_properties']
-        offer['resource_properties'] = oscutils.format_dict(
+        offer = client.get_offer(parsed_args.uuid)
+
+        offer_info = {k: getattr(offer, k, '') for k in
+                      OFFER_RESOURCE.detailed_fields}
+        resource_properties = offer_info['resource_properties']
+        offer_info['resource_properties'] = oscutils.format_dict(
             resource_properties)
 
-        return zip(*sorted(offer.items()))
+        return zip(*sorted(offer_info.items()))
 
 
 class DeleteOffer(command.Command):
@@ -232,7 +235,7 @@ class DeleteOffer(command.Command):
     def take_action(self, parsed_args):
 
         client = self.app.client_manager.lease
-        client.offer.delete(parsed_args.uuid)
+        client.delete_offer(parsed_args.uuid)
         print('Deleted offer %s' % parsed_args.uuid)
 
 
@@ -280,9 +283,9 @@ class ClaimOffer(command.ShowOne):
         if 'properties' in fields:
             fields['properties'] = json.loads(fields['properties'])
 
-        lease = client.offer.claim(parsed_args.offer_uuid, **fields)
+        lease = client.claim_offer(parsed_args.offer_uuid, **fields)
 
-        data = dict([(f, getattr(lease, f, '')) for f in
+        data = dict([(f, lease.get(f, '')) for f in
                     LEASE_RESOURCE.fields])
 
         return self.dict2columns(data)

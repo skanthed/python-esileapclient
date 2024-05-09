@@ -15,8 +15,7 @@ import logging
 import openstack
 from osc_lib.command import command
 from osc_lib import utils as oscutils
-
-from esileapclient.v1 import client as esileapclient
+from esi import connection
 from esileapclient.v1.lease import Lease as LEASE_RESOURCE
 
 LOG = logging.getLogger(__name__)
@@ -90,9 +89,9 @@ class MDCListLease(command.Lister):
         }
 
         for c in cloud_regions:
-            client = esileapclient.Client(session=c.get_session())
+            client = connection.ESIConnection(config=c).lease
 
-            leases = client.lease.list(filters)
+            leases = list(client.leases(**filters))
             for lease in leases:
                 lease.cloud = c.name
                 lease.region = c.config['region_name']

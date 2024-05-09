@@ -33,7 +33,7 @@ class TestOfferCreate(TestOffer):
     def setUp(self):
         super(TestOfferCreate, self).setUp()
 
-        self.client_mock.offer.create.return_value = (
+        self.client_mock.create_offer.return_value = (
             base.FakeResource(copy.deepcopy(fakes.OFFER))
         )
 
@@ -76,14 +76,14 @@ class TestOfferCreate(TestOffer):
             'start_time': fakes.lease_start_time,
         }
 
-        self.client_mock.offer.create.assert_called_once_with(**args)
+        self.client_mock.create_offer.assert_called_once_with(**args)
 
 
 class TestOfferList(TestOffer):
     def setUp(self):
         super(TestOfferList, self).setUp()
 
-        self.client_mock.offer.list.return_value = [
+        self.client_mock.offers.return_value = [
             base.FakeResource(copy.deepcopy(fakes.OFFER))
         ]
         self.cmd = offer.ListOffer(self.app, None)
@@ -111,7 +111,7 @@ class TestOfferList(TestOffer):
             'resource_class': parsed_args.resource_class
         }
 
-        self.client_mock.offer.list.assert_called_with(filters)
+        self.client_mock.offers.assert_called_with(**filters)
 
         collist = [
             "UUID",
@@ -160,7 +160,7 @@ class TestOfferList(TestOffer):
             'resource_class': parsed_args.resource_class
         }
 
-        self.client_mock.offer.list.assert_called_with(filters)
+        self.client_mock.offers.assert_called_with(**filters)
 
         long_collist = [
             'UUID',
@@ -197,7 +197,7 @@ class TestOfferShow(TestOffer):
     def setUp(self):
         super(TestOfferShow, self).setUp()
 
-        self.client_mock.offer.get.return_value = \
+        self.client_mock.get_offer.return_value = \
             base.FakeResource(copy.deepcopy(fakes.OFFER))
 
         self.cmd = offer.ShowOffer(self.app, None)
@@ -209,7 +209,7 @@ class TestOfferShow(TestOffer):
         parsed_args = self.check_parser(self.cmd, arglist, verifylist)
         columns, data = self.cmd.take_action(parsed_args)
 
-        self.client_mock.offer.get.assert_called_once_with(
+        self.client_mock.get_offer.assert_called_once_with(
             fakes.offer_uuid)
 
         collist = (
@@ -275,7 +275,7 @@ class TestOfferDelete(TestOffer):
         parsed_args = self.check_parser(self.cmd, arglist, verifylist)
         self.cmd.take_action(parsed_args)
 
-        self.client_mock.offer.delete.assert_called_once_with(
+        self.client_mock.delete_offer.assert_called_once_with(
             fakes.offer_uuid)
 
     def test_offer_delete_no_id(self):
@@ -315,7 +315,7 @@ class TestOfferClaim(TestOffer):
             'start_time': fakes.lease_start_time,
         }
 
-        self.client_mock.offer.claim.assert_called_once_with(
+        self.client_mock.claim_offer.assert_called_once_with(
             fakes.offer_uuid, **lease_args)
 
     def test_offer_claim_no_id(self):

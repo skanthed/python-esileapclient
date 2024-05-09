@@ -17,8 +17,7 @@ import openstack
 from osc_lib.command import command
 from osc_lib import exceptions
 from osc_lib import utils as oscutils
-
-from esileapclient.v1 import client as esileapclient
+from esi import connection
 from esileapclient.v1.lease import Lease as LEASE_RESOURCE
 from esileapclient.v1.offer import Offer as OFFER_RESOURCE
 
@@ -104,9 +103,8 @@ class MDCListOffer(command.Lister):
         }
 
         for c in cloud_regions:
-            client = esileapclient.Client(session=c.get_session())
-
-            offers = client.offer.list(filters)
+            client = connection.ESIConnection(config=c).lease
+            offers = list(client.offers(**filters))
             for offer in offers:
                 offer.cloud = c.name
                 offer.region = c.config['region_name']
@@ -179,8 +177,8 @@ class MDCClaimOffer(command.Lister):
 
         available_offers = []
         for c in cloud_regions:
-            client = esileapclient.Client(session=c.get_session())
-            offers = client.offer.list(filters)
+            client = connection.ESIConnection(config=c).lease
+            offers = list(client.offers(**filters))
             for offer in offers:
                 offer.cloud_region = c
                 offer.cloud = c.name
@@ -194,10 +192,9 @@ class MDCClaimOffer(command.Lister):
         offers_to_claim = random.sample(available_offers, node_count)
         leases = []
         for offer in offers_to_claim:
-            client = esileapclient.Client(
-                session=offer.cloud_region.get_session())
+            client = connection.ESIConnection(config=offer.cloud_region).lease
             try:
-                lease = client.offer.claim(
+                lease = client.claim_offer(
                     offer.uuid,
                     **{'start_time': parsed_args.start_time,
                        'end_time': parsed_args.end_time})
