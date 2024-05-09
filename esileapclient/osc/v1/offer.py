@@ -184,9 +184,8 @@ class ListOffer(command.Lister):
             labels = OFFER_RESOURCE.fields.values()
 
         return (labels,
-                (oscutils.get_item_properties(s, columns, formatters={
-                    'resource_properties': oscutils.format_dict
-                }) for s in data))
+                (oscutils.get_item_properties(s, columns)
+                 for s in data))
 
 
 class ShowOffer(command.ShowOne):
@@ -211,9 +210,10 @@ class ShowOffer(command.ShowOne):
 
         offer_info = {k: getattr(offer, k, '') for k in
                       OFFER_RESOURCE.detailed_fields}
-        resource_properties = offer_info['resource_properties']
-        offer_info['resource_properties'] = oscutils.format_dict(
-            resource_properties)
+
+        offer_info['resource_properties'] = getattr(
+            offer, 'resource_properties', {}
+        )
 
         return zip(*sorted(offer_info.items()))
 

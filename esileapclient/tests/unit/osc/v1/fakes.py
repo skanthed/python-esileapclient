@@ -44,7 +44,6 @@ event_type = 'fake.event'
 event_time = "3000-07-01T12"
 object_type = 'lease'
 node_properties = {'cpu': '40', 'traits': ['trait1', 'trait2']}
-formatted_node_properties = "cpu='40', traits='['trait1', 'trait2']'"
 
 OFFER = {
     'availabilities': json.loads(lease_availabilities),
