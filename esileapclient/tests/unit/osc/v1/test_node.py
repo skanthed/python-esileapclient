@@ -115,7 +115,7 @@ class TestNodeList(TestNode):
                      '',
                      fakes.lease_resource_class,
                      '', '',
-                     fakes.formatted_node_properties,
+                     fakes.node_properties,
                      '', '', '', ''
                      ),)
         self.assertEqual(datalist, tuple(data))

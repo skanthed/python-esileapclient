@@ -54,6 +54,5 @@ class ListNode(command.Lister):
             labels = NODE_RESOURCE.fields.values()
 
         return (labels,
-                (oscutils.get_item_properties(s, columns, formatters={
-                    'properties': oscutils.format_dict
-                }) for s in data))
+                (oscutils.get_item_properties(s, columns)
+                 for s in data))

@@ -221,9 +221,8 @@ class ListLease(command.Lister):
             labels = LEASE_RESOURCE.fields.values()
 
         return (labels,
-                (oscutils.get_item_properties(s, columns, formatters={
-                    'resource_properties': oscutils.format_dict
-                }) for s in data))
+                (oscutils.get_item_properties(s, columns)
+                 for s in data))
 
 
 class ShowLease(command.ShowOne):
@@ -247,9 +246,10 @@ class ShowLease(command.ShowOne):
 
         lease_info = {k: getattr(lease, k, '') for k in
                       LEASE_RESOURCE.detailed_fields}
-        resource_properties = lease_info['resource_properties']
-        lease_info['resource_properties'] = oscutils.format_dict(
-            resource_properties)
+
+        lease_info['resource_properties'] = getattr(
+            lease, 'resource_properties', {}
+        )
 
         return zip(*sorted(lease_info.items()))
 
