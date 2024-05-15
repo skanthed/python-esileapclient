@@ -44,6 +44,9 @@ class TestNodeList(TestNode):
         columns, data = self.cmd.take_action(parsed_args)
 
         filters = {
+            'resource_class': parsed_args.resource_class,
+            'owner': parsed_args.owner,
+            'lessee': parsed_args.lessee
         }
 
         self.client_mock.nodes.assert_called_with(**filters)
@@ -76,6 +79,9 @@ class TestNodeList(TestNode):
         columns, data = self.cmd.take_action(parsed_args)
 
         filters = {
+            'resource_class': parsed_args.resource_class,
+            'owner': parsed_args.owner,
+            'lessee': parsed_args.lessee
         }
 
         self.client_mock.nodes.assert_called_with(**filters)

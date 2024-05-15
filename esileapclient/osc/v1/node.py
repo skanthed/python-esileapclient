@@ -33,6 +33,21 @@ class ListNode(command.Lister):
             default=False,
             help="Show detailed information about the nodes.",
             action='store_true')
+        parser.add_argument(
+            '--resource-class',
+            dest='resource_class',
+            required=False,
+            help="Filter nodes by resource class.")
+        parser.add_argument(
+            '--owner',
+            dest='owner',
+            required=False,
+            help="Filter nodes by owner.")
+        parser.add_argument(
+            '--lessee',
+            dest='lessee',
+            required=False,
+            help="Filter nodes by lessee.")
 
         return parser
 
@@ -40,8 +55,10 @@ class ListNode(command.Lister):
 
         client = self.app.client_manager.lease
 
-        # No filters yet
         filters = {
+            'resource_class': parsed_args.resource_class,
+            'owner': parsed_args.owner,
+            'lessee': parsed_args.lessee
         }
 
         data = list(client.nodes(**filters))
