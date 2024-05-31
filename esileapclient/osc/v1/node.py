@@ -16,6 +16,7 @@ from osc_lib.command import command
 from osc_lib import utils as oscutils
 
 from esileapclient.v1.node import Node as NODE_RESOURCE
+from esileapclient.common import utils
 
 LOG = logging.getLogger(__name__)
 
@@ -48,6 +49,15 @@ class ListNode(command.Lister):
             dest='lessee',
             required=False,
             help="Filter nodes by lessee.")
+        parser.add_argument(
+            '--property',
+            dest='properties',
+            required=False,
+            action='append',
+            help="Filter offers by properties. Format: 'key>=value'. "
+                 "Can be specified multiple times. "
+                 f"Supported operators are: {', '.join(utils.OPS.keys())}",
+            metavar='"key>=value"')
 
         return parser
 
@@ -55,13 +65,20 @@ class ListNode(command.Lister):
 
         client = self.app.client_manager.lease
 
+        # Initial filters dictionary
         filters = {
             'resource_class': parsed_args.resource_class,
             'owner': parsed_args.owner,
             'lessee': parsed_args.lessee
         }
 
-        data = list(client.nodes(**filters))
+        # Retrieve all nodes with initial filters
+        all_nodes = list(client.nodes(**filters))
+
+        # Apply filtering based on properties
+        filtered_nodes = utils.filter_nodes_by_properties(
+            all_nodes, parsed_args.properties
+        )
 
         if parsed_args.long:
             columns = NODE_RESOURCE.detailed_fields.keys()
@@ -72,4 +89,4 @@ class ListNode(command.Lister):
 
         return (labels,
                 (oscutils.get_item_properties(s, columns)
-                 for s in data))
+                 for s in filtered_nodes))

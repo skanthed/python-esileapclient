@@ -43,7 +43,16 @@ event_id = 7
 event_type = 'fake.event'
 event_time = "3000-07-01T12"
 object_type = 'lease'
-node_properties = {'cpu': '40', 'traits': ['trait1', 'trait2']}
+node_properties = {
+    'cpus': '40',
+    'memory_mb': '131072',
+    'local_gb': '1200',
+    'cpu_arch': 'x86_64',
+    'vendor': 'fake-vendor',
+    'cpu_model_name': 'fake-model',
+    'cpu_frequency': '2000.0',
+    'traits': ['trait1', 'trait2']
+    }
 
 OFFER = {
     'availabilities': json.loads(lease_availabilities),
