@@ -13,6 +13,7 @@
 import copy
 import json
 from osc_lib.tests import utils as osctestutils
+from unittest import mock
 
 from esileapclient.osc.v1 import lease
 from esileapclient.tests.unit.osc.v1 import base
@@ -181,6 +182,33 @@ class TestLeaseList(TestLease):
                      ),)
         self.assertEqual(datalist, tuple(data))
 
+    @mock.patch('esileapclient.common.utils.filter_nodes_by_properties')
+    def test_lease_list_with_property_filter(self, mock_filter_nodes):
+        arglist = ['--property', 'cpus>=40']
+        verifylist = [('properties', ['cpus>=40'])]
+
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        columns, data = self.cmd.take_action(parsed_args)
+
+        filters = {
+            'status': parsed_args.status,
+            'offer_uuid': parsed_args.offer_uuid,
+            'start_time': str(parsed_args.time_range[0]) if
+            parsed_args.time_range else None,
+            'end_time': str(parsed_args.time_range[1]) if
+            parsed_args.time_range else None,
+            'project_id': parsed_args.project_id,
+            'owner_id': parsed_args.owner_id,
+            'view': 'all' if parsed_args.all else None,
+            'resource_type': parsed_args.resource_type,
+            'resource_uuid': parsed_args.resource_uuid,
+            'resource_class': parsed_args.resource_class,
+            'purpose': parsed_args.purpose
+        }
+
+        self.client_mock.leases.assert_called_with(**filters)
+        mock_filter_nodes.assert_called_with(mock.ANY, parsed_args.properties)
+
     def test_lease_list_long(self):
         arglist = ['--long']
         verifylist = [('long', True)]
@@ -241,6 +269,33 @@ class TestLeaseList(TestLease):
                      fakes.lease_purpose,
                      ),)
         self.assertEqual(datalist, tuple(data))
+
+    @mock.patch('esileapclient.common.utils.filter_nodes_by_properties')
+    def test_lease_list_long_with_property_filter(self, mock_filter_nodes):
+        arglist = ['--long', '--property', 'memory_mb<=262144']
+        verifylist = [('long', True), ('properties', ['memory_mb<=262144'])]
+
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        columns, data = self.cmd.take_action(parsed_args)
+
+        filters = {
+            'status': parsed_args.status,
+            'offer_uuid': parsed_args.offer_uuid,
+            'start_time': str(parsed_args.time_range[0]) if
+            parsed_args.time_range else None,
+            'end_time': str(parsed_args.time_range[1]) if
+            parsed_args.time_range else None,
+            'project_id': parsed_args.project_id,
+            'owner_id': parsed_args.owner_id,
+            'view': 'all' if parsed_args.all else None,
+            'resource_type': parsed_args.resource_type,
+            'resource_uuid': parsed_args.resource_uuid,
+            'resource_class': parsed_args.resource_class,
+            'purpose': parsed_args.purpose
+        }
+
+        self.client_mock.leases.assert_called_with(**filters)
+        mock_filter_nodes.assert_called_with(mock.ANY, parsed_args.properties)
 
 
 class TestLeaseShow(TestLease):

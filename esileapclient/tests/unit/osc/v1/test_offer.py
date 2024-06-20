@@ -13,6 +13,7 @@
 import copy
 import json
 from osc_lib.tests import utils as osctestutils
+from unittest import mock
 
 from esileapclient.osc.v1 import offer
 from esileapclient.tests.unit.osc.v1 import base
@@ -137,6 +138,33 @@ class TestOfferList(TestOffer):
                      ),)
         self.assertEqual(datalist, tuple(data))
 
+    @mock.patch('esileapclient.common.utils.filter_nodes_by_properties')
+    def test_offer_list_with_property_filter(self, mock_filter_nodes):
+        arglist = ['--property', 'cpus>=40']
+        verifylist = [('properties', ['cpus>=40'])]
+
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        columns, data = self.cmd.take_action(parsed_args)
+
+        filters = {
+            'status': parsed_args.status,
+            'start_time': str(parsed_args.time_range[0]) if
+            parsed_args.time_range else None,
+            'end_time': str(parsed_args.time_range[1]) if
+            parsed_args.time_range else None,
+            'available_start_time': str(parsed_args.availability_range[0]) if
+            parsed_args.availability_range else None,
+            'available_end_time': str(parsed_args.availability_range[1]) if
+            parsed_args.availability_range else None,
+            'project_id': parsed_args.project_id,
+            'resource_type': parsed_args.resource_type,
+            'resource_uuid': parsed_args.resource_uuid,
+            'resource_class': parsed_args.resource_class
+        }
+
+        self.client_mock.offers.assert_called_with(**filters)
+        mock_filter_nodes.assert_called_with(mock.ANY, parsed_args.properties)
+
     def test_offer_list_long(self):
         arglist = ['--long']
         verifylist = [('long', True)]
@@ -191,6 +219,33 @@ class TestOfferList(TestOffer):
                      fakes.parent_lease_uuid
                      ),)
         self.assertEqual(datalist, tuple(data))
+
+    @mock.patch('esileapclient.common.utils.filter_nodes_by_properties')
+    def test_offer_list_long_with_property_filter(self, mock_filter_nodes):
+        arglist = ['--long', '--property', 'memory_mb>=131072']
+        verifylist = [('long', True), ('properties', ['memory_mb>=131072'])]
+
+        parsed_args = self.check_parser(self.cmd, arglist, verifylist)
+        columns, data = self.cmd.take_action(parsed_args)
+
+        filters = {
+            'status': parsed_args.status,
+            'start_time': str(parsed_args.time_range[0]) if
+            parsed_args.time_range else None,
+            'end_time': str(parsed_args.time_range[1]) if
+            parsed_args.time_range else None,
+            'available_start_time': str(parsed_args.availability_range[0]) if
+            parsed_args.availability_range else None,
+            'available_end_time': str(parsed_args.availability_range[1]) if
+            parsed_args.availability_range else None,
+            'project_id': parsed_args.project_id,
+            'resource_type': parsed_args.resource_type,
+            'resource_uuid': parsed_args.resource_uuid,
+            'resource_class': parsed_args.resource_class
+        }
+
+        self.client_mock.offers.assert_called_with(**filters)
+        mock_filter_nodes.assert_called_with(mock.ANY, parsed_args.properties)
 
 
 class TestOfferShow(TestOffer):

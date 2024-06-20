@@ -18,6 +18,7 @@ from osc_lib import utils as oscutils
 
 from esileapclient.v1.lease import Lease as LEASE_RESOURCE
 from esileapclient.v1.offer import Offer as OFFER_RESOURCE
+from esileapclient.common import utils
 
 LOG = logging.getLogger(__name__)
 
@@ -148,6 +149,15 @@ class ListOffer(command.Lister):
             dest='resource_class',
             required=False,
             help="Show all leases with given resource-class.")
+        parser.add_argument(
+            '--property',
+            dest='properties',
+            required=False,
+            action='append',
+            help="Filter offers by properties. Format: 'key>=value'. "
+                 "Can be specified multiple times. "
+                 f"Supported operators are: {', '.join(utils.OPS.keys())}",
+            metavar='"key>=value"')
 
         return parser
 
@@ -176,6 +186,9 @@ class ListOffer(command.Lister):
 
         data = list(client.offers(**filters))
 
+        filtered_leases = utils.filter_nodes_by_properties(
+            data, parsed_args.properties)
+
         if parsed_args.long:
             columns = OFFER_RESOURCE.long_fields.keys()
             labels = OFFER_RESOURCE.long_fields.values()
@@ -185,7 +198,7 @@ class ListOffer(command.Lister):
 
         return (labels,
                 (oscutils.get_item_properties(s, columns)
-                 for s in data))
+                 for s in filtered_leases))
 
 
 class ShowOffer(command.ShowOne):
