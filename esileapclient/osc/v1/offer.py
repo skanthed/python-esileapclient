@@ -107,7 +107,10 @@ class ListOffer(command.Lister):
             '--status',
             dest='status',
             required=False,
-            help="Show all offers with given status.")
+            help="Show all offers with the given status. "
+                 "Use --status 'any' to show offers with any status "
+                 "(by default, offers with 'available' and 'error' statuses"
+                 "are shown).")
         parser.add_argument(
             '--time-range',
             dest='time_range',
