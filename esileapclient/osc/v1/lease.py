@@ -143,7 +143,11 @@ class ListLease(command.Lister):
             '--status',
             dest='status',
             required=False,
-            help="Show all leases with given status.")
+            help="Show all leases with the given status. "
+                 "Use --status 'any' to show leases with any status "
+                 "(by default, leases with 'created', 'active', 'error', "
+                 "'wait_cancel', 'wait_expire', and 'wait_fulfill' statuses "
+                 "are shown).")
         parser.add_argument(
             '--offer-uuid',
             dest='offer_uuid',
