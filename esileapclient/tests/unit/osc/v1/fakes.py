@@ -116,3 +116,7 @@ EVENT = {
     'lessee_id': lease_project_id,
     'owner_id': lease_owner_id,
 }
+
+CONSOLE_AUTH_TOKEN = {
+    'node_uuid': node_uuid,
+}
